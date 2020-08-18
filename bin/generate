@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby
+
+# frozen_string_literal: true
+
+require "active_support/core_ext/string/inflections"
+require "kramdown"
+require "kramdown-parser-gfm"
+require "date"
+require "pry"
+
+# Autoparses title, date, url slug, and html from supplied path of a markdown post
+class MarkdownPost
+  def initialize(path)
+    contents = File.open(path).read
+
+    raw_title, raw_date = contents.lines.first(2)
+
+    @title = raw_title.gsub("#", "").strip
+    @date = Date.parse(raw_date.gsub("*", "").strip)
+    @slug = "#{date}-#{title}".parameterize
+    @html = to_html(contents)
+  end
+
+  attr_reader :title, :date, :slug, :html
+
+  private
+
+  def to_html(markdown)
+    Kramdown::Document.new(markdown, input: "GFM").to_html
+  end
+end
+
+m = MarkdownPost.new("./srcs/mcdonalds_wifi_review.md")
+puts m.title
+puts m.date
+puts m.slug
+# binding.pry

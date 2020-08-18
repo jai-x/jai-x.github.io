@@ -6,4 +6,6 @@ source "https://rubygems.org"
 
 gem "kramdown"
 gem "kramdown-parser-gfm"
-gem "rubocop", group: [ :development ]
+gem "activesupport"
+gem "rubocop"
+gem "pry"
