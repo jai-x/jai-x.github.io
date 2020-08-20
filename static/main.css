@@ -1,18 +1,30 @@
 @font-face {
   font-family: "Roboto Slab";
-  src: url("/static/robotoslab_regular.ttf") format("truetype");
+  src: url("/static/roboto_slab_regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Fira Code";
+  src: url("/static/fira_code_regular.ttf") format("truetype");
 }
 
 :root {
-  --text-color: white;
-  --bg-color: #181818;
+  --color-text: white;
+  --color-link: #00b0f4;
+  --color-bg: #181818;
+  --color-code: white;
+  --color-code-bg: black;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
 
-  color: var(--text-color);
-  background-color: var(--bg-color);
+  color: var(--color-text);
+  background-color: var(--color-bg);
 
   font-family: "Roboto Slab";
   font-size: 16px;
@@ -20,11 +32,6 @@ body {
 
   display: flex;
   flex-direction: row;
-}
-
-a:focus {
-  border: 1px solid white;
-  border-radius: 5px;
 }
 
 nav {
@@ -39,16 +46,35 @@ nav {
 
 nav a {
   margin-bottom: 2ch;
-  color: var(--text-color);
+  color: var(--color-text);
   text-decoration: none;
   padding: 0.3ch;
+  border-bottom: 1px var(--color-text) solid;
 }
 
 nav a:hover, nav a:focus {
-  text-decoration: none;
-  border-bottom: 1px var(--text-color) solid;
+  border-bottom: 1px transparent solid;
 }
 
 main {
   max-width: 70ch;
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  border-bottom: 1px transparent solid;
+}
+
+
+a:hover, a:focus {
+  border-bottom: 1px var(--color-link) solid;
+}
+
+code {
+  font-family: "Fira Code";
+  border-radius: 3px;
+  color: var(--color-code);
+  background-color: var(--color-code-bg);
+  padding: 0 0.5ch;
 }
