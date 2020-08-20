@@ -21,6 +21,8 @@ end
 
 # Autoparses title, date, url slug, and html from supplied path of a markdown post
 class Post
+  attr_reader :title, :date, :slug, :content
+
   def initialize(markdown_path)
     contents = File.open(markdown_path).read
 
@@ -32,27 +34,27 @@ class Post
     @content = md_to_html(contents)
   end
 
-  attr_reader :title, :date, :slug, :content
+  # Sort comparison by date
+  def <=>(other)
+    date <=> other.date
+  end
 end
 
 # Directories
-SRCS_DIR            = path_exists!("./srcs",                    "SRCS_DIR")
-POST_DIR            = path_exists!("./posts",                   "POST_DIR")
+POST_SRCS_DIR       = path_exists!("./post_srcs",               "POST_SRCS_DIR")
 POST_TEMPLATE_PATH  = path_exists!("./templates/post.html.erb", "POST_TEMPLATE")
 HOME_TEMPLATE_PATH  = path_exists!("./templates/home.html.erb", "HOME_TEMPLATE")
+POST_DIR            = path_exists!("./posts",                   "POST_DIR")
 
 # Init templates
 POST_TEMPLATE = ERB.new(File.open(POST_TEMPLATE_PATH).read)
 HOME_TEMPLATE = ERB.new(File.open(HOME_TEMPLATE_PATH).read)
 
-POSTS = Dir["#{SRCS_DIR}/*.md"].map do |src|
-  next if ["home.md", "about.md"].include?(File.basename(src))
-
-  Post.new(src)
-end
+# Reverse date sorting for latest first
+POSTS = Dir["#{POST_SRCS_DIR}/*.md"].map { |src| Post.new(src) }.sort.reverse
 
 # Render homepage
-home_html = HOME_TEMPLATE.result_with_hash(posts: POSTS.first(3))
+home_html = HOME_TEMPLATE.result_with_hash(posts: POSTS)
 File.new("./index.html", "w").write(home_html)
 puts "Rendered homepage: ./index.html"
 

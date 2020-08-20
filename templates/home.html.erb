@@ -8,13 +8,13 @@
   <body>
     <nav>
       <a href="/">home</a>
-      <a href="/posts">posts</a>
+      <a href="/about.html">about</a>
     </nav>
+    <div class="separator"></div>
     <main>
-      <h1>Website Under Construction!</h1>
-      <h2>Latest posts:</h2>
       <% posts.each do |post| %>
-        <a href="<%= "/posts/#{post.slug}.html" %>"><%= post.title %></a> - <%= post.date %>
+      <h2 class="post-link"><a href="<%= "/posts/#{post.slug}.html" %>"><%= post.title %></a></h2>
+      <p class="post-date"><strong><%= post.date %></strong></p>
       <% end %>
     </main>
   </body>
