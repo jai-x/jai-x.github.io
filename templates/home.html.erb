@@ -13,9 +13,9 @@
     <main>
       <h1>Website Under Construction!</h1>
       <h2>Latest posts:</h2>
-      
-        <a href="/posts/2018-04-30-a-look-at-wifi-in-mcdonalds.html">A Look at Wifi in McDonalds</a> - 2018-04-30
-      
+      <% posts.each do |post| %>
+        <a href="<%= "/posts/#{post.slug}.html" %>"><%= post.title %></a> - <%= post.date %>
+      <% end %>
     </main>
   </body>
 </html>

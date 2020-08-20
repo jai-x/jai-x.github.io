@@ -1,0 +1,54 @@
+@font-face {
+  font-family: "Roboto Slab";
+  src: url("/static/robotoslab_regular.ttf") format("truetype");
+}
+
+:root {
+  --text-color: white;
+  --bg-color: #181818;
+}
+
+body {
+  margin: 0;
+
+  color: var(--text-color);
+  background-color: var(--bg-color);
+
+  font-family: "Roboto Slab";
+  font-size: 16px;
+  text-rendering: optimizelegibility;
+
+  display: flex;
+  flex-direction: row;
+}
+
+a:focus {
+  border: 1px solid white;
+  border-radius: 5px;
+}
+
+nav {
+  font-size: 20px;
+  padding-top: 3ch;
+  min-width: 12ch;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+nav a {
+  margin-bottom: 2ch;
+  color: var(--text-color);
+  text-decoration: none;
+  padding: 0.3ch;
+}
+
+nav a:hover, nav a:focus {
+  text-decoration: none;
+  border-bottom: 1px var(--text-color) solid;
+}
+
+main {
+  max-width: 70ch;
+}

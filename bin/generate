@@ -3,35 +3,65 @@
 # frozen_string_literal: true
 
 require "active_support/core_ext/string/inflections"
+require "date"
+require "erb"
 require "kramdown"
 require "kramdown-parser-gfm"
-require "date"
-require "pry"
+require "pry" # binding.pry
+
+def path_exists!(path, path_name)
+  raise "#{path_name} does not exist: '#{path}'" unless File.exist?(path)
+
+  path
+end
+
+def md_to_html(markdown)
+  Kramdown::Document.new(markdown, input: "GFM", hard_wrap: false).to_html
+end
 
 # Autoparses title, date, url slug, and html from supplied path of a markdown post
-class MarkdownPost
-  def initialize(path)
-    contents = File.open(path).read
+class Post
+  def initialize(markdown_path)
+    contents = File.open(markdown_path).read
 
     raw_title, raw_date = contents.lines.first(2)
 
-    @title = raw_title.gsub("#", "").strip
-    @date = Date.parse(raw_date.gsub("*", "").strip)
-    @slug = "#{date}-#{title}".parameterize
-    @html = to_html(contents)
+    @title   = raw_title.gsub("#", "").strip
+    @date    = Date.parse(raw_date.gsub("*", "").strip)
+    @slug    = "#{date}-#{title}".parameterize
+    @content = md_to_html(contents)
   end
 
-  attr_reader :title, :date, :slug, :html
-
-  private
-
-  def to_html(markdown)
-    Kramdown::Document.new(markdown, input: "GFM").to_html
-  end
+  attr_reader :title, :date, :slug, :content
 end
 
-m = MarkdownPost.new("./srcs/mcdonalds_wifi_review.md")
-puts m.title
-puts m.date
-puts m.slug
-# binding.pry
+# Directories
+SRCS_DIR            = path_exists!("./srcs",                    "SRCS_DIR")
+POST_DIR            = path_exists!("./posts",                   "POST_DIR")
+POST_TEMPLATE_PATH  = path_exists!("./templates/post.html.erb", "POST_TEMPLATE")
+HOME_TEMPLATE_PATH  = path_exists!("./templates/home.html.erb", "HOME_TEMPLATE")
+
+# Init templates
+POST_TEMPLATE = ERB.new(File.open(POST_TEMPLATE_PATH).read)
+HOME_TEMPLATE = ERB.new(File.open(HOME_TEMPLATE_PATH).read)
+
+POSTS = Dir["#{SRCS_DIR}/*.md"].map do |src|
+  next if ["home.md", "about.md"].include?(File.basename(src))
+
+  Post.new(src)
+end
+
+# Render homepage
+home_html = HOME_TEMPLATE.result_with_hash(posts: POSTS.first(3))
+File.new("./index.html", "w").write(home_html)
+puts "Rendered homepage: ./index.html"
+
+# Render posts
+POSTS.each do |post|
+  post_html = POST_TEMPLATE.result_with_hash(post: post)
+  file_path = "#{POST_DIR}/#{post.slug}.html"
+
+  File.new("#{POST_DIR}/#{post.slug}.html", "w").write(post_html)
+
+  puts "Rendered post: #{file_path}"
+end

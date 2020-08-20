@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="/static/main.css">
-    <title>home | jai.moe</title>
+    <title><%= post.title %> | jai.moe</title>
   </head>
   <body>
     <nav>
@@ -11,11 +11,7 @@
       <a href="/posts">posts</a>
     </nav>
     <main>
-      <h1>Website Under Construction!</h1>
-      <h2>Latest posts:</h2>
-      
-        <a href="/posts/2018-04-30-a-look-at-wifi-in-mcdonalds.html">A Look at Wifi in McDonalds</a> - 2018-04-30
-      
+      <%= post.content %>
     </main>
   </body>
 </html>
