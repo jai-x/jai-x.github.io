@@ -8,12 +8,20 @@
   src: url("/static/fira_code_regular.ttf") format("truetype");
 }
 
-:root {
-  --color-text: white;
-  --color-link: #00b0f4;
-  --color-bg: #181818;
-  --color-code: white;
-  --color-code-bg: black;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-text: #FFFFFF;
+    --color-bg: #181818;
+    --color-link: #00b0f4;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-text: #181818;
+    --color-bg: #FFFFFF;
+    --color-link: #0067E0;
+  }
 }
 
 * {
