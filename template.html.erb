@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="/static/main.css">
-    <title>home | jai.moe</title>
+    <title><%= title_template %></title>
   </head>
   <body>
     <nav>
@@ -12,10 +12,7 @@
     </nav>
     <div class="separator"></div>
     <main>
-      <% posts.each do |post| %>
-      <h2 class="post-link"><a href="<%= "/posts/#{post.slug}.html" %>"><%= post.title %></a></h2>
-      <p class="post-date"><strong><%= post.date %></strong></p>
-      <% end %>
+      <%= main_template %>
     </main>
   </body>
 </html>
