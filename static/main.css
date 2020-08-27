@@ -70,7 +70,7 @@ nav a:hover, nav a:focus {
 
 .separator {
   min-width: 1px;
-  height: 120px;
+  height: 235px;
   background-color: var(--color-text);
   margin-top: 20px;
 }
