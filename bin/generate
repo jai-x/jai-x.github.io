@@ -15,7 +15,7 @@ module Renderable
     raise ArgumentError unless template.is_a?(ERB)
 
     File.open(path, "w") do |file|
-      file.write(template.result_with_hash(title: title, content: content))
+      file.write(template.result_with_hash(title: title.downcase, content: content))
       puts "Rendered page: #{path}"
     end
   end
