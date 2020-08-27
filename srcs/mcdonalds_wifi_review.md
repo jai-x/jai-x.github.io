@@ -16,7 +16,7 @@ telecommunications provider. It's not clear if being an O2 customer
 yields any additional benefit when using the wifi here (as I am not one), but
 the captive portal does provide an option to login with an O2 customer account.
 
-There are two available SSIDs for the service. There are `McDonald's Free Wifi`
+There are two available SSIDs for the service; `McDonald's Free Wifi`
 and `O2 Wifi`. Presumably the O2 SSID is for the benefit of O2 customers in
 which they provide wifi access points for them with a shared SSID. As with most
 public wifi, the access point for these SSIDs was unsecured, with no form of
