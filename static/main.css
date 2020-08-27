@@ -13,6 +13,8 @@
     --color-text: #FFFFFF;
     --color-bg: #181818;
     --color-link: #00b0f4;
+    --color-code-bg: #000000;
+    --color-code-border: #595959;
   }
 }
 
@@ -21,6 +23,8 @@
     --color-text: #181818;
     --color-bg: #FFFFFF;
     --color-link: #0067E0;
+    --color-code-bg: #F2F2F2;
+    --color-code-border: #DBDBDB;
   }
 }
 
@@ -99,7 +103,7 @@ a:hover, a:focus {
 code {
   font-family: "Fira Code";
   border-radius: 3px;
-  color: var(--color-code);
   background-color: var(--color-code-bg);
   padding: 0 0.5ch;
+  border: 1px solid var(--color-code-border);
 }
