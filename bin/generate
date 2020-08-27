@@ -9,29 +9,37 @@ require "kramdown"
 require "kramdown-parser-gfm"
 # require "pry" # binding.pry
 
-def path_exists!(path, path_name)
-  raise "#{path_name} does not exist: '#{path}'" unless File.exist?(path)
+# Autoparses title and html from supplied path of markdown post
+class Page
+  def initialize(markdown_path)
+    @raw = File.open(markdown_path).read
 
-  path
-end
+    yield self if block_given?
+  end
 
-def md_to_html(markdown)
-  Kramdown::Document.new(markdown, input: "GFM", hard_wrap: false).to_html
+  def title
+    @title ||= @raw.lines[0].gsub("#", "").strip
+  end
+
+  def content
+    @content ||= md_to_html(@raw)
+  end
+
+  private
+
+  def md_to_html(markdown)
+    Kramdown::Document.new(markdown, input: "GFM", hard_wrap: false).to_html
+  end
 end
 
 # Autoparses title, date, url slug, and html from supplied path of a markdown post
-class Post
-  attr_reader :title, :date, :slug, :content
+class Post < Page
+  def slug
+    @slug ||= "#{date}-#{title}".parameterize
+  end
 
-  def initialize(markdown_path)
-    contents = File.open(markdown_path).read
-
-    raw_title, raw_date = contents.lines.first(2)
-
-    @title   = raw_title.gsub("#", "").strip
-    @date    = Date.parse(raw_date.gsub("*", "").strip)
-    @slug    = "#{date}-#{title}".parameterize
-    @content = md_to_html(contents)
+  def date
+    @date ||= Date.parse(@raw.gsub("*", "").strip)
   end
 
   # Sort comparison by date
@@ -40,87 +48,52 @@ class Post
   end
 end
 
-# Post directories
-POST_SRCS_DIR = path_exists!("./post_srcs", "POST_SRCS_DIR")
-POST_DIR      = path_exists!("./posts",     "POST_DIR")
-
 # Generate posts
-POSTS = Dir["#{POST_SRCS_DIR}/*.md"].map { |src| Post.new(src) }.sort.reverse
+POSTS = Dir["./srcs/*.md"]
+        .reject { |src| src.include?("about.md") || src.include?("404.md") }
+        .map { |src| Post.new(src) }
+        .sort.reverse
 puts "Generated posts: #{POSTS.count} post(s)"
 
 # Main template
-MAIN_TEMPLATE = ERB.new(File.open("./template.html.erb").read)
-
-# Home template templates
-HOME_TEMPLATE_TITLE_TEMPLATE = "home | jai.moe"
-HOME_TEMPLATE_MAIN_TEMPLATE = <<~'DOC'.strip
-  <% posts.each do |post| %>
-    <h2 class="post-link"><a href="<%= "/posts/#{post.slug}.html" %>"><%= post.title %></a></h2>
-    <p class="post-date"><strong><%= post.date %></strong></p>
-  <% end %>
-DOC
-
-# Post template templates
-POST_TEMPLATE_TITLE_TEMPLATE = "<%= post.title %> | jai.moe"
-POST_TEMPLATE_MAIN_TEMPLATE = "<%= post.content %>"
-
-# 404 template templates
-E404_TEMPLATE_TITLE_TEMPLATE = "404| jai.moe"
-E404_TEMPLATE_MAIN_TEMPLATE = "<h1>404</h1><p><strong>Page not found</strong></p>"
-
-# About template templates
-ABOUT_TEMPLATE_TITLE_TEMPLATE = "About| jai.moe"
-ABOUT_TEMPLATE_MAIN_TEMPLATE = "<h1>About</h1><p><strong>Under construction</strong></p>"
-
-# Generate post template
-POST_TEMPLATE = ERB.new(
-  MAIN_TEMPLATE.result_with_hash(
-    title_template: POST_TEMPLATE_TITLE_TEMPLATE,
-    main_template: POST_TEMPLATE_MAIN_TEMPLATE
-  )
-)
-puts "Generated post template"
-
-# Generate home template
-HOME_TEMPLATE = ERB.new(
-  MAIN_TEMPLATE.result_with_hash(
-    title_template: HOME_TEMPLATE_TITLE_TEMPLATE,
-    main_template: HOME_TEMPLATE_MAIN_TEMPLATE
-  )
-)
-puts "Generated home template"
+TEMPLATE = ERB.new(File.open("./template.html.erb").read)
 
 # Render 404 page
-File.new("./404.html", "w").write(
-  MAIN_TEMPLATE.result_with_hash(
-    title_template: E404_TEMPLATE_TITLE_TEMPLATE,
-    main_template: E404_TEMPLATE_MAIN_TEMPLATE
-  )
-)
+File.open("./404.html", "w") do |file|
+  Page.new("./srcs/404.md") do |page|
+    file.write(TEMPLATE.result_with_hash(title: page.title, content: page.content))
+  end
+end
 puts "Rendered 404 page: ./404.html"
 
 # Render about page
-File.new("./about.html", "w").write(
-  MAIN_TEMPLATE.result_with_hash(
-    title_template: ABOUT_TEMPLATE_TITLE_TEMPLATE,
-    main_template: ABOUT_TEMPLATE_MAIN_TEMPLATE
-  )
-)
+File.open("./about.html", "w") do |file|
+  Page.new("./srcs/about.md") do |page|
+    file.write(TEMPLATE.result_with_hash(title: page.title, content: page.content))
+  end
+end
 puts "Rendered about page: ./about.html"
 
 # Render homepage
-File.new("./index.html", "w").write(
-  HOME_TEMPLATE.result_with_hash(posts: POSTS)
-)
+File.open("./index.html", "w") do |file|
+  content = POSTS.map do |post|
+    <<~HTML.strip
+      <h2 class="post-link"><a href="/posts/#{post.slug}.html">#{post.title}</a></h2>
+      <p class="post-date"><strong>#{post.date}</strong></p>
+    HTML
+  end.join("\n")
+
+  file.write(TEMPLATE.result_with_hash(title: "home", content: content))
+end
 puts "Rendered home page: ./index.html"
 
 # Render posts
 POSTS.each do |post|
-  file_path = "#{POST_DIR}/#{post.slug}.html"
+  path = "./posts/#{post.slug}.html"
 
-  File.new(file_path, "w").write(
-    POST_TEMPLATE.result_with_hash(post: post)
-  )
+  File.open(path, "w") do |file|
+    file.write(TEMPLATE.result_with_hash(title: post.title, content: post.content))
+  end
 
-  puts "Rendered post page: #{file_path}"
+  puts "Rendered post page: #{path}"
 end
