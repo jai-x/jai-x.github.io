@@ -81,7 +81,6 @@ nav {
     flex-direction: row;
     max-width: 55ch;
     width: 100%;
-    margin-bottom: 2ch;
   }
 }
 
@@ -127,13 +126,16 @@ nav a:hover, nav a:focus {
 }
 
 main {
+  width: 100%;
   max-width: 66ch;
-  margin-left: 2ch;
-  margin-right: 2ch;
+  padding-left: 2ch;
+  padding-right: 2ch;
 }
 
-main h1:first-of-type {
-  margin-top: 0;
+@media (orientation: landscape) {
+  main h1:first-of-type {
+    margin-top: 0;
+  }
 }
 
 .post-link {
