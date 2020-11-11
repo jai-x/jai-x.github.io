@@ -73,7 +73,7 @@ POSTS = Dir["./srcs/*.md"]
 puts "Generated posts: #{POSTS.count} post(s)"
 
 # Main template
-TEMPLATE = ERB.new(File.open("./template.html.erb").read)
+TEMPLATE = ERB.new(File.open("./srcs/template.html.erb").read)
 
 # Render 404 page
 MarkdownPage.new("./srcs/404.md").render(TEMPLATE, "./404.html")

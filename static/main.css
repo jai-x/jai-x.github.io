@@ -43,42 +43,97 @@ body {
   text-rendering: optimizelegibility;
 
   display: flex;
-  flex-direction: row;
+}
+
+@media (orientation: landscape) {
+  body {
+    flex-direction: row;
+    align-items: flex-start;
+    padding-top: 2ch;
+  }
+}
+
+@media (orientation: portrait) {
+  body {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 nav {
+  position: relative;
   font-size: 20px;
-  padding-top: 3ch;
-  min-width: 12ch;
 
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: space-evenly;
+}
+
+@media (orientation: landscape) {
+  nav {
+    flex-direction: column;
+    min-width: 12ch;
+  }
+}
+
+@media (orientation: portrait) {
+  nav {
+    flex-direction: row;
+    max-width: 55ch;
+    width: 100%;
+    margin-bottom: 2ch;
+  }
+}
+
+.nav-border {
+  background-color: white;
+  position: absolute;
+}
+
+@media (orientation: landscape) {
+  .nav-border {
+    right: 0;
+    top: 5%;
+    width: 1px;
+    height: 90%;
+  }
+}
+
+@media (orientation: portrait) {
+  .nav-border {
+    bottom: 0;
+    left: 5%;
+    width: 90%;
+    height: 1px;
+  }
 }
 
 nav a {
-  margin-bottom: 2ch;
   color: var(--color-text);
   text-decoration: none;
-  padding: 0.3ch;
   border-bottom: 1px transparent solid;
+  margin-top: 1.5ch;
+  margin-bottom: 1.5ch;
+}
+
+@media (orientation: portrait) {
+  nav a:not(:first-of-type) {
+    font-size: 16px;
+  }
 }
 
 nav a:hover, nav a:focus {
   border-bottom: 1px var(--color-text) solid;
 }
 
-.separator {
-  min-width: 1px;
-  height: 235px;
-  background-color: var(--color-text);
-  margin-top: 20px;
+main {
+  max-width: 66ch;
+  margin-left: 2ch;
+  margin-right: 2ch;
 }
 
-main {
-  max-width: 70ch;
-  padding-left: 2ch;
-  padding-right: 2ch;
+main h1:first-of-type {
+  margin-top: 0;
 }
 
 .post-link {
