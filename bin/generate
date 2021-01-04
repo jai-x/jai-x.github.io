@@ -9,6 +9,17 @@ require "kramdown"
 require "kramdown-parser-gfm"
 # require "pry" # binding.pry
 
+# Simple class to convert a Mardown string to HTMl
+class MarkdownConverter
+  def initialize(md_str)
+    @md_str = md_str
+  end
+
+  def convert
+    Kramdown::Document.new(@md_str, input: "GFM", hard_wrap: false).to_html
+  end
+end
+
 # Simple module to allow rendering for things that respond to #title and #content
 module Renderable
   def render(template, path)
@@ -39,13 +50,7 @@ class MarkdownPage
   end
 
   def content
-    @content ||= md_to_html(@raw)
-  end
-
-  private
-
-  def md_to_html(markdown)
-    Kramdown::Document.new(markdown, input: "GFM", hard_wrap: false).to_html
+    @content ||= MarkdownConverter.new(@raw).convert
   end
 end
 
@@ -67,7 +72,7 @@ end
 
 # Generate posts
 POSTS = Dir["./srcs/*.md"]
-        .reject { |src| src.include?("about.md") || src.include?("404.md") }
+        .reject { |src| src.include?("home.md") || src.include?("404.md") }
         .map { |src| Post.new(src) }
         .sort.reverse
 puts "Generated posts: #{POSTS.count} post(s)"
@@ -78,17 +83,19 @@ TEMPLATE = ERB.new(File.open("./srcs/template.html.erb").read)
 # Render 404 page
 MarkdownPage.new("./srcs/404.md").render(TEMPLATE, "./404.html")
 
-# Render about page
-MarkdownPage.new("./srcs/about.md").render(TEMPLATE, "./about.html")
-
 # Render posts
 POSTS.each { |post| post.render(TEMPLATE, "./posts/#{post.slug}.html") }
 
 # Render homepage
-HOME_CONTENT = POSTS.map do |post|
-  <<~HTML.strip
-    <h2 class="post-link"><a href="/posts/#{post.slug}.html">#{post.title}</a></h2>
-    <p class="post-date"><strong>#{post.date}</strong></p>
-  HTML
-end.join("\n")
+HOME_CONTENT = [
+  MarkdownConverter.new(File.open("./srcs/home.md").read).convert,
+  "<hr>",
+  *POSTS.map do |post|
+    <<~HTML.strip
+      <h2 class="post-link"><a href="/posts/#{post.slug}.html">#{post.title}</a></h2>
+      <p class="post-date"><strong>#{post.date}</strong></p>
+    HTML
+  end
+].join("\n")
+
 Page.new("home", HOME_CONTENT).render(TEMPLATE, "./index.html")
