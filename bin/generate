@@ -57,11 +57,11 @@ end
 # Autoparses title, date, url slug, and html from supplied path of a markdown post
 class Post < MarkdownPage
   def slug
-    @slug ||= "#{date}-#{title}".parameterize
+    @slug ||= title.parameterize
   end
 
   def date
-    @date ||= Date.parse(@raw.gsub("*", "").strip)
+    @date ||= Date.parse(@raw.lines[1].gsub("*", "").strip)
   end
 
   # Sort comparison by date
