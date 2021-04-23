@@ -70,11 +70,13 @@ class Post < MarkdownPage
   end
 end
 
+NON_POSTS = %w[404.md ideas.md].freeze
+
 # Generate posts
-POSTS = Dir["./srcs/*.md"]
-        .reject { |src| src.include?("home.md") || src.include?("404.md") }
-        .map { |src| Post.new(src) }
-        .sort.reverse
+POSTS = Dir["./srcs/*.md"].reject { |src| NON_POSTS.include?(File.basename(src)) }
+                          .map { |src| Post.new(src) }
+                          .sort
+                          .reverse
 puts "Generated posts: #{POSTS.count} post(s)"
 
 # Main template
@@ -88,14 +90,15 @@ POSTS.each { |post| post.render(TEMPLATE, "./posts/#{post.slug}.html") }
 
 # Render homepage
 HOME_CONTENT = [
-  MarkdownConverter.new(File.open("./srcs/home.md").read).convert,
-  "<hr>",
   *POSTS.map do |post|
     <<~HTML.strip
       <h2 class="post-link"><a href="/posts/#{post.slug}.html">#{post.title}</a></h2>
       <p class="post-date"><strong>#{post.date}</strong></p>
     HTML
-  end
+  end,
+  "<hr>",
+  "<h3>Ideas</h3>",
+  MarkdownConverter.new(File.open("./srcs/ideas.md").read).convert
 ].join("\n")
 
 Page.new("home", HOME_CONTENT).render(TEMPLATE, "./index.html")
