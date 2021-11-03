@@ -2,8 +2,8 @@
 
 source "https://rubygems.org"
 
+gem "activesupport"
 gem "kramdown"
 gem "kramdown-parser-gfm"
-gem "activesupport"
-gem "rubocop"
 gem "pry"
+gem "rubocop"
