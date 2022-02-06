@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/main.css">
+    <title>a look at esbuild | jai.moe</title>
+  </head>
+  <body>
+    <nav>
+      <a href="/">jai.moe</a>
+      <a href="https://twitter.com/jai________">twitter</a>
+      <a href="https://github.com/jai-x">github</a>
+      <a href="mailto:jai@jai.moe">email</a>
+      <div class="nav-border"></div>
+    </nav>
+    <main>
+      <h1 id="a-look-at-esbuild">A look at esbuild</h1>
+<p><strong>2022-02-05</strong></p>
+
+<p>I’ve recently made a <a href="https://crashfm.live">new small web project</a> which requires some
+Javascript. I did try initially to make it as simple as possible using only
+vanilla JS but eventually making use of some libraries became necessary, for
+both code quality and things like <a href="https://greensock.com/gsap/">animation</a>. Libraries and bundling
+require build tooling and the Javascript ecosystem has far too much choice in
+that front. From experience at work and some <a href="https://github.com/jai-x/wasd2020">other</a>
+<a href="https://github.com/jai-x/wasd2021">projects</a> I’ve used both Webpack and Rollup but I wanted to try
+something different that I had heard good things about: esbuild.</p>
+
+<p><a href="https://esbuild.github.io">esbuild</a> is interesting in that it is very “batteries included”
+compared to most other JS build tools. Its default install is capable of module
+path resolving, bundling, tree shaking, minification, and sourcemaps all without
+the needing to install plugins. Additional perks include an in-built dev server,
+support for JSX, and support for Typescript. The main party trick is that it is
+fast! Unlike most JS build tools, esbuild is not written in Javascript but in Go
+and is distributed as a statically compiled binary executable with an optional
+Javascript API. As a result, a single command line invocation of esbuild can
+replace a more complex Webpack config with no additional plugins, and still be
+much faster.</p>
+
+<p>As an example here’s the command I used to use for development on my current
+project and a breakdown of what each part does:</p>
+
+<pre><code class="language-shell">$ esbuild src/app.js --outfile=./www/static/main.js --bundle --sourcemap --servedir=./www
+</code></pre>
+
+<ul>
+  <li>
+    <p><code>esbuild</code>:<br />
+Invocation of the <code>esbuild</code> binary on the command line.</p>
+  </li>
+  <li>
+    <p><code>esbuild src/app.js --outfile=./www/static/main.js</code>:<br />
+Defining the entrypoint and output file,  with the outfile requiring an
+additional <code>--outfile</code> flag. My project is a static site with only the site
+JS needing transformation so I can output the bundle directly into the serve
+directory.</p>
+  </li>
+  <li>
+    <p><code>--bundle</code>:<br />
+Enables esbuild to resolve module imports and bundle them into the outfile.
+By default, using this flag will also activate <a href="https://en.wikipedia.org/wiki/Tree_shaking">tree shaking</a>
+for all static module imports that esbuild is able to resolve and analyse.</p>
+  </li>
+  <li>
+    <p><code>--sourcemap</code>:<br />
+Enables output of a <a href="https://developer.mozilla.org/en-US/docs/Tools/Debugger/How_to/Use_a_source_map">source map</a> with the bundle, which makes
+debugging easier.</p>
+  </li>
+  <li>
+    <p><code>--servedir=./www</code>:<br />
+Enables esbuild to serve the contents of the specified directory on localhost.
+As my site is entirely static with only the JS needed transformation, this is
+handy as I can simply serve the entire output directory. When <code>--servedir</code> is
+combined with <code>--outfile</code>, any requests made to the server for the outfile
+will result in esbuild recompiling and returning the result it as the response
+on demand instead of serving a pre-generated file. This is in contrast to the
+common JS tooling pattern of having the dev server watch for source file
+changes to recompile and optionally use hot module reloading. This approach is
+explained more in the <a href="https://esbuild.github.io/api/#serve">docs</a>.</p>
+  </li>
+</ul>
+
+<p>As another example here’s the command I used to use for building for deployment
+with different flags and a breakdown of what each part does:</p>
+
+<pre><code class="language-shell">$ esbuild src/app.js --outfile=./www/static/main.js --bundle --minify --legal-comments=none --drop:console --analyze
+</code></pre>
+
+<ul>
+  <li>
+    <p><code>--minify</code>:<br />
+Performs <a href="https://en.wikipedia.org/wiki/Minification_(programming)">minification</a> on the outfile.</p>
+  </li>
+  <li>
+    <p><code>--legal-comments=none</code>:<br />
+Strips any legal comments that are bundled with dependant libraries from the
+outfile.</p>
+  </li>
+  <li>
+    <p><code>--drop:console</code>:<br />
+Performs source code modification on outfile to remove any calls to the JS
+<code>console</code> API. I found this useful as I can leave in debug print statements in
+the source code and have them automatically removed on build.</p>
+  </li>
+  <li>
+    <p><code>--analyze</code>:<br />
+Provides a pretty printed output to console with a breakdown how each module
+resolved from the input source contributed to the final size of the outfile.</p>
+  </li>
+</ul>
+
+<p>esbuild having all its options available via command line flags is quite handy,
+especially when iterating and trying to find the correct setting for your
+project. Even in the documentation, the command line flags are always presented
+as the first choice for any configurable option. As such, you can just easily
+just copy these command line invocations into your <code>package.json</code> scripts
+section and have things up and running really quickly. Here’s what that used to
+look like for my project:</p>
+
+<pre><code class="language-json">// package.json
+{
+  "scripts": {
+    "dev": "esbuild src/app.js --outfile=./www/static/main.js --bundle --sourcemap --servedir=./www",
+    "build": "esbuild src/app.js --outfile=./www/static/main.js --bundle --minify --legal-comments=none --drop:console --analyze"
+  }
+}
+</code></pre>
+
+<p>While these lines aren’t the most unwieldy, they aren’t the best to look at and
+as with most tooling I wanted to move this to a config file that esbuild could
+use instead. Unfortunately, one of esbuild’s drawbacks as it does not support
+using a config file. Instead esbuild chooses to expose a Javascript API to
+invoke the core process so that you can write a script which can be used in
+place of a config file. While this does indeed cover the use case of having the
+configuration stored in it’s own file, using the API has the side effect of
+disabling the default console output which is something I found really useful.
+As such, I ended up making a <a href="https://github.com/jai-x/crashfm-dot-live/blob/main/bin/esbuildParse.mjs">simple script</a> to read in a simple
+JSON config file, parse it into the expected command line flags and then pipe
+the result into the esbuild binary. As a result, my <code>package.json</code> file and
+associated esbuild JSON config files now look like this:</p>
+
+<pre><code class="language-json">// package.json
+{
+  "scripts": {
+    "build": "./bin/esbuildParse.mjs ./esbuild.build.json | xargs esbuild",
+    "dev": "./bin/esbuildParse.mjs ./esbuild.dev.json | xargs esbuild",
+  }
+}
+</code></pre>
+<pre><code class="language-json">// esbuild.dev.json
+{
+  "entry": "./src/app.js",
+  "outfile": "./www/static/main.js",
+  "bundle": true,
+  "sourcemap": true,
+  "servedir": "./www"
+}
+</code></pre>
+<pre><code class="language-json">// esbuild.build.json
+{
+  "entry": "./src/app.js",
+  "outfile": "./www/static/main.js",
+  "bundle": true,
+  "minify": true,
+  "legal-comments": "none",
+  "drop": "console",
+  "analyze": true
+}
+</code></pre>
+
+<p>Looking at npm, there do seem to be packages that provide this sort of
+functionality to wrap the esbuild command with a config file, but I think I will
+just stick with my simple script for now.</p>
+
+
+    </main>
+  </body>
+</html>
