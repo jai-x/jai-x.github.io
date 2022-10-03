@@ -43,8 +43,8 @@ much faster.</p>
 <p>As an example here’s the command I used to use for development on my current
 project and a breakdown of what each part does:</p>
 
-<pre><code class="language-shell">$ esbuild src/app.js --outfile=./www/static/main.js --bundle --sourcemap --servedir=./www
-</code></pre>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>esbuild src/app.js <span class="nt">--outfile</span><span class="o">=</span>./www/static/main.js <span class="nt">--bundle</span> <span class="nt">--sourcemap</span> <span class="nt">--servedir</span><span class="o">=</span>./www
+</code></pre></div></div>
 
 <ul>
   <li>
@@ -86,8 +86,8 @@ explained more in the <a href="https://esbuild.github.io/api/#serve">docs</a>.</
 <p>As another example here’s the command I used to use for building for deployment
 with different flags and a breakdown of what each part does:</p>
 
-<pre><code class="language-shell">$ esbuild src/app.js --outfile=./www/static/main.js --bundle --minify --legal-comments=none --drop:console --analyze
-</code></pre>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>esbuild src/app.js <span class="nt">--outfile</span><span class="o">=</span>./www/static/main.js <span class="nt">--bundle</span> <span class="nt">--minify</span> <span class="nt">--legal-comments</span><span class="o">=</span>none <span class="nt">--drop</span>:console <span class="nt">--analyze</span>
+</code></pre></div></div>
 
 <ul>
   <li>
@@ -120,14 +120,14 @@ just copy these command line invocations into your <code>package.json</code> scr
 section and have things up and running really quickly. Here’s what that used to
 look like for my project:</p>
 
-<pre><code class="language-json">// package.json
-{
-  "scripts": {
-    "dev": "esbuild src/app.js --outfile=./www/static/main.js --bundle --sourcemap --servedir=./www",
-    "build": "esbuild src/app.js --outfile=./www/static/main.js --bundle --minify --legal-comments=none --drop:console --analyze"
-  }
-}
-</code></pre>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">//</span><span class="w"> </span><span class="err">package.json</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"dev"</span><span class="p">:</span><span class="w"> </span><span class="s2">"esbuild src/app.js --outfile=./www/static/main.js --bundle --sourcemap --servedir=./www"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"build"</span><span class="p">:</span><span class="w"> </span><span class="s2">"esbuild src/app.js --outfile=./www/static/main.js --bundle --minify --legal-comments=none --drop:console --analyze"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <p>While these lines aren’t the most unwieldy, they aren’t the best to look at and
 as with most tooling I wanted to move this to a config file that esbuild could
@@ -142,34 +142,34 @@ JSON config file, parse it into the expected command line flags and then pipe
 the result into the esbuild binary. As a result, my <code>package.json</code> file and
 associated esbuild JSON config files now look like this:</p>
 
-<pre><code class="language-json">// package.json
-{
-  "scripts": {
-    "build": "./bin/esbuildParse.mjs ./esbuild.build.json | xargs esbuild",
-    "dev": "./bin/esbuildParse.mjs ./esbuild.dev.json | xargs esbuild",
-  }
-}
-</code></pre>
-<pre><code class="language-json">// esbuild.dev.json
-{
-  "entry": "./src/app.js",
-  "outfile": "./www/static/main.js",
-  "bundle": true,
-  "sourcemap": true,
-  "servedir": "./www"
-}
-</code></pre>
-<pre><code class="language-json">// esbuild.build.json
-{
-  "entry": "./src/app.js",
-  "outfile": "./www/static/main.js",
-  "bundle": true,
-  "minify": true,
-  "legal-comments": "none",
-  "drop": "console",
-  "analyze": true
-}
-</code></pre>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">//</span><span class="w"> </span><span class="err">package.json</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"build"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./bin/esbuildParse.mjs ./esbuild.build.json | xargs esbuild"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"dev"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./bin/esbuildParse.mjs ./esbuild.dev.json | xargs esbuild"</span><span class="p">,</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">//</span><span class="w"> </span><span class="err">esbuild.dev.json</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"entry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./src/app.js"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"outfile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./www/static/main.js"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"bundle"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"sourcemap"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"servedir"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./www"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">//</span><span class="w"> </span><span class="err">esbuild.build.json</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"entry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./src/app.js"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"outfile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./www/static/main.js"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"bundle"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"minify"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"legal-comments"</span><span class="p">:</span><span class="w"> </span><span class="s2">"none"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"drop"</span><span class="p">:</span><span class="w"> </span><span class="s2">"console"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"analyze"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <p>Looking at npm, there do seem to be packages that provide this sort of
 functionality to wrap the esbuild command with a config file, but I think I will
