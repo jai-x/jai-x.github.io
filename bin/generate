@@ -120,7 +120,7 @@ class HomePage < Phlex::View
   attr_reader :posts
 
   def ideas
-    @ideas ||= MarkdownConverter.new(File.read("./srcs/ideas.md")).convert
+    @ideas ||= MarkdownConverter.new(File.read("./ideas.md")).convert
   end
 end
 
@@ -161,11 +161,11 @@ class PageWriter
   end
 
   def write(view)
-    final_path = File.join(prefix, view.path)
+    path = File.join(prefix, view.path)
 
-    File.open(final_path, "w") do |file|
+    File.open(path, "w") do |file|
       file.write(view.call)
-      puts "Rendered page: #{final_path}"
+      puts "Rendered page: #{path}"
     end
   end
 
@@ -175,16 +175,14 @@ class PageWriter
 end
 
 class Website
-  NON_POSTS = %w[ideas.md].freeze
   def self.generate
-    writer = PageWriter.new
+    writer = PageWriter.new("./www")
 
     # Generate and render posts
-    posts = Dir["./srcs/*.md"].reject { |src| NON_POSTS.include?(File.basename(src)) }
-                              .map { |src| Post.new(src) }
-                              .sort
-                              .reverse
-                              .each { |post| writer.write PostPage.new(post) }
+    posts = Dir["./posts/*.md"].map { |src| Post.new(src) }
+                               .sort
+                               .reverse
+                               .each { |post| writer.write PostPage.new(post) }
 
     # Render 404 page
     writer.write NotFoundPage.new

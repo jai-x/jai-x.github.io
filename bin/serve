@@ -1,1 +1,1 @@
-ruby -run -e httpd .
+ruby -run -e httpd ./www

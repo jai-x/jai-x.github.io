@@ -1,3 +1,0 @@
-- A review of the movie Tommorrowland (2015)
-- A page to interactively view mathematical transform (like the  Fourier transform video from 3B1B)
-- A webpage like jetsetradio.live
