@@ -137,8 +137,8 @@ main {
 }
 
 main > * {
-  width: 100%;
-  max-width: var(--content-width);
+  width: var(--content-width);
+  max-width: 100%;
 }
 
 @media (orientation: landscape) {
