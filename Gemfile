@@ -5,5 +5,9 @@ source "https://rubygems.org"
 gem "activesupport"
 gem "kramdown"
 gem "kramdown-parser-gfm"
-gem "pry"
-gem "rubocop"
+gem "phlex"
+
+group :development do
+  gem "pry"
+  gem "rubocop"
+end

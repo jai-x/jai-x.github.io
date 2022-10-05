@@ -21,6 +21,10 @@ GEM
     parallel (1.22.1)
     parser (3.1.2.1)
       ast (~> 2.4.1)
+    phlex (0.3.2)
+      syntax_tree (~> 3.6)
+      zeitwerk (~> 2.6)
+    prettier_print (0.1.0)
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -40,9 +44,12 @@ GEM
     rubocop-ast (1.21.0)
       parser (>= 3.1.1.0)
     ruby-progressbar (1.11.0)
+    syntax_tree (3.6.2)
+      prettier_print
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.3.0)
+    zeitwerk (2.6.1)
 
 PLATFORMS
   ruby
@@ -51,6 +58,7 @@ DEPENDENCIES
   activesupport
   kramdown
   kramdown-parser-gfm
+  phlex
   pry
   rubocop
 

@@ -7,9 +7,8 @@ require "date"
 require "erb"
 require "kramdown"
 require "kramdown-parser-gfm"
-# require "pry" # binding.pry
+require "phlex"
 
-# Simple class to convert a Mardown string to HTMl
 class MarkdownConverter
   def initialize(md_str)
     @md_str = md_str
@@ -20,86 +19,179 @@ class MarkdownConverter
   end
 end
 
-# Simple module to allow rendering for things that respond to #title and #content
-module Renderable
-  def render(template, path)
-    raise ArgumentError unless template.is_a?(ERB)
+class PageView < Phlex::View
+  def initialize(title)
+    @title_text = title
+  end
 
-    File.open(path, "w") do |file|
-      file.write(template.result_with_hash(title: title.downcase, content: content))
-      puts "Rendered page: #{path}"
+  def template(&block)
+    doctype
+
+    html do
+      head do
+        meta charset: "utf-8"
+        meta name: "viewport", content: "width=device-width, initial-scale=1"
+        link rel: "preload", href: "/static/roboto_slab_regular.ttf", as: "font", crossorigin: true
+        link rel: "preload", href: "/static/fira_code_regular.ttf", as: "font", crossorigin: true
+        link rel: "stylesheet", href: "/static/main.css"
+        title "#{title_text} | jai.moe"
+      end
+
+      body do
+        nav do
+          a "jai.moe", href: "/"
+          a "twitter", href: "https://twitter.com/jai_1337"
+          a "github", href: "https://github.com/jai-x"
+          a "email", href: "mailto:jai@jai.moe"
+          div class: "nav-border"
+        end
+        main { yield_content(&block) }
+      end
+    end
+  end
+
+  private
+
+  attr_reader :title_text, :content_view
+end
+
+class PostPage < Phlex::View
+  def initialize(post)
+    @post = post
+  end
+
+  def path
+    "posts/#{post.slug}.html"
+  end
+
+  def template
+    render PageView.new(post.title) do
+      raw post.html
+    end
+  end
+
+  private
+
+  attr_reader :post
+end
+
+class NotFoundPage < Phlex::View
+  def path
+    "404.html"
+  end
+
+  def template
+    render PageView.new('home') do
+      h1 "404"
+      p "Page not found"
     end
   end
 end
 
-# Simple struct to contain page attributes
-Page = Struct.new(:title, :content) do
-  include Renderable
+class HomePage < Phlex::View
+  def initialize(posts)
+    @posts = posts
+  end
+
+  def path
+    "index.html"
+  end
+
+  def template
+    render PageView.new('home') do
+      posts.each do |post|
+        h2 class: "post-link" do
+          a post.title, href: "/posts/#{post.slug}.html"
+        end
+        p class: "post-date" do
+          strong post.date
+        end
+      end
+
+      raw "<hr>"
+
+      h3 "Ideas"
+      raw ideas
+    end
+  end
+
+  private
+
+  attr_reader :posts
+
+  def ideas
+    @ideas ||= MarkdownConverter.new(File.read("./srcs/ideas.md")).convert
+  end
 end
 
-# Autoparses title and html from supplied path of markdown post
-class MarkdownPage
-  include Renderable
-
+class Post
   def initialize(md_path)
-    @raw = File.read(md_path)
+    @markdown = File.read(md_path)
+  end
+
+  def html
+    MarkdownConverter.new(markdown).convert
   end
 
   def title
-    @title ||= @raw.lines[0].gsub("#", "").strip
+    @title ||= markdown.lines[0].gsub("#", "").strip.downcase
   end
 
-  def content
-    @content ||= MarkdownConverter.new(@raw).convert
-  end
-end
-
-# Autoparses title, date, url slug, and html from supplied path of a markdown post
-class Post < MarkdownPage
   def slug
     @slug ||= title.parameterize
   end
 
   def date
-    @date ||= Date.parse(@raw.lines[1].gsub("*", "").strip)
+    @date ||= Date.parse(markdown.lines[1].gsub("*", "").strip)
   end
 
   # Sort comparison by date
   def <=>(other)
     date <=> other.date
   end
+
+  private
+
+  attr_reader :markdown
 end
 
-NON_POSTS = %w[404.md ideas.md].freeze
+class PageWriter
+  def initialize(prefix = "./")
+    @prefix = prefix
+  end
 
-# Generate posts
-POSTS = Dir["./srcs/*.md"].reject { |src| NON_POSTS.include?(File.basename(src)) }
-                          .map { |src| Post.new(src) }
-                          .sort
-                          .reverse
-puts "Generated posts: #{POSTS.count} post(s)"
+  def write(view)
+    final_path = File.join(prefix, view.path)
 
-# Main template
-TEMPLATE = ERB.new(File.read("./srcs/template.html.erb"))
+    File.open(final_path, "w") do |file|
+      file.write(view.call)
+      puts "Rendered page: #{final_path}"
+    end
+  end
 
-# Render 404 page
-MarkdownPage.new("./srcs/404.md").render(TEMPLATE, "./404.html")
+  private
 
-# Render posts
-POSTS.each { |post| post.render(TEMPLATE, "./posts/#{post.slug}.html") }
+  attr_reader :prefix
+end
 
-# Render homepage
-HOME_CONTENT = [
-  *POSTS.map do |post|
-    <<~HTML.strip
-      <h2 class="post-link"><a href="/posts/#{post.slug}.html">#{post.title}</a></h2>
-      <p class="post-date"><strong>#{post.date}</strong></p>
-    HTML
-  end,
-  "<hr>",
-  "<h3>Ideas</h3>",
-  MarkdownConverter.new(File.read("./srcs/ideas.md")).convert
-].join("\n")
+class Website
+  NON_POSTS = %w[ideas.md].freeze
+  def self.generate
+    writer = PageWriter.new
 
-Page.new("home", HOME_CONTENT).render(TEMPLATE, "./index.html")
+    # Generate and render posts
+    posts = Dir["./srcs/*.md"].reject { |src| NON_POSTS.include?(File.basename(src)) }
+                              .map { |src| Post.new(src) }
+                              .sort
+                              .reverse
+                              .each { |post| writer.write PostPage.new(post) }
 
+    # Render 404 page
+    writer.write NotFoundPage.new
+
+    # Render home page
+    writer.write HomePage.new(posts)
+  end
+end
+
+Website.generate
