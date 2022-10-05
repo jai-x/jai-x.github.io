@@ -99,19 +99,22 @@ class HomePage < Phlex::View
 
   def template
     render PageView.new('home') do
-      posts.each do |post|
-        h2 class: "post-link" do
-          a post.title, href: "/posts/#{post.slug}.html"
-        end
-        p class: "post-date" do
-          strong post.date
+      section do
+        h2 "posts"
+        posts.each do |post|
+          h2 class: "post-link" do
+            a post.title, href: "/posts/#{post.slug}.html"
+          end
+          p class: "post-date" do
+            strong post.date
+          end
         end
       end
 
-      raw "<hr>"
-
-      h3 "Ideas"
-      raw ideas
+      section do
+        h2 "ideas"
+        raw ideas
+      end
     end
   end
 
