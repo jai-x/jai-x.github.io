@@ -9,53 +9,65 @@ require "kramdown"
 require "kramdown-parser-gfm"
 require "phlex"
 
-class MarkdownConverter
-  def initialize(md_str)
-    @md_str = md_str
-  end
+module PageComponents
+  class Layout < Phlex::View
+    def initialize(title)
+      @title_text = title
+    end
 
-  def convert
-    Kramdown::Document.new(@md_str, input: "GFM", hard_wrap: false).to_html
-  end
-end
+    def template(&block)
+      doctype
 
-class PageView < Phlex::View
-  def initialize(title)
-    @title_text = title
-  end
-
-  def template(&block)
-    doctype
-
-    html do
-      head do
-        meta charset: "utf-8"
-        meta name: "viewport", content: "width=device-width, initial-scale=1"
-        link rel: "preload", href: "/static/roboto_slab_regular.ttf", as: "font", crossorigin: true
-        link rel: "preload", href: "/static/fira_code_regular.ttf", as: "font", crossorigin: true
-        link rel: "stylesheet", href: "/static/main.css"
-        title "#{title_text} | jai.moe"
-      end
-
-      body do
-        nav do
-          a "jai.moe", href: "/"
-          a "twitter", href: "https://twitter.com/jai_1337"
-          a "github", href: "https://github.com/jai-x"
-          a "email", href: "mailto:jai@jai.moe"
-          div class: "nav-border"
+      html do
+        head do
+          meta charset: "utf-8"
+          meta name: "viewport", content: "width=device-width, initial-scale=1"
+          link rel: "preload", href: "/static/roboto_slab_regular.ttf", as: "font", crossorigin: true
+          link rel: "preload", href: "/static/fira_code_regular.ttf", as: "font", crossorigin: true
+          link rel: "stylesheet", href: "/static/main.css"
+          title "#{title_text} | jai.moe"
         end
-        main { yield_content(&block) }
+
+        body do
+          nav do
+            a(href: "/") { "jai.moe" }
+            a(href: "https://twitter.com/jai_1337") { "twitter" }
+            a(href: "https://github.com/jai-x") { "github" }
+            a(href: "mailto:jai@jai.moe") { "email" }
+            div class: "nav-border"
+          end
+
+          main { yield_content(&block) }
+        end
       end
     end
+
+    private
+
+    attr_reader :title_text, :content_view
   end
 
-  private
+  class Markdown < Phlex::View
+    def initialize(content)
+      @content = content
+    end
 
-  attr_reader :title_text, :content_view
+    def template
+      raw Kramdown::Document.new(content, input: "GFM", hard_wrap: false).to_html
+    end
+
+    private
+
+    attr_reader :content
+  end
 end
 
-class PostPage < Phlex::View
+class ApplicationPage < Phlex::View
+  include PageComponents
+  register_element :hr
+end
+
+class PostPage < ApplicationPage
   def initialize(post)
     @post = post
   end
@@ -65,8 +77,8 @@ class PostPage < Phlex::View
   end
 
   def template
-    render PageView.new(post.title) do
-      raw post.html
+    render Layout.new(post.title) do
+      render Markdown.new(post.markdown)
     end
   end
 
@@ -75,20 +87,20 @@ class PostPage < Phlex::View
   attr_reader :post
 end
 
-class NotFoundPage < Phlex::View
+class NotFoundPage < ApplicationPage
   def path
     "404.html"
   end
 
   def template
-    render PageView.new('home') do
+    render Layout.new('404') do
       h1 "404"
       p "Page not found"
     end
   end
 end
 
-class HomePage < Phlex::View
+class HomePage < ApplicationPage
   def initialize(posts)
     @posts = posts
   end
@@ -98,22 +110,20 @@ class HomePage < Phlex::View
   end
 
   def template
-    render PageView.new('home') do
-      section do
+    render Layout.new('home') do
+      section class: "home-section" do
         h2 "posts"
         posts.each do |post|
-          h2 class: "post-link" do
-            a post.title, href: "/posts/#{post.slug}.html"
-          end
-          p class: "post-date" do
-            strong post.date
-          end
+          h3 { a post.title, href: "/posts/#{post.slug}.html" }
+          p { strong post.date }
         end
       end
 
-      section do
+      hr
+
+      section class: "home-section" do
         h2 "ideas"
-        raw ideas
+        render Markdown.new(ideas)
       end
     end
   end
@@ -123,17 +133,15 @@ class HomePage < Phlex::View
   attr_reader :posts
 
   def ideas
-    @ideas ||= MarkdownConverter.new(File.read("./ideas.md")).convert
+    @ideas ||= File.read("./ideas.md")
   end
 end
 
 class Post
+  attr_reader :markdown
+
   def initialize(md_path)
     @markdown = File.read(md_path)
-  end
-
-  def html
-    MarkdownConverter.new(markdown).convert
   end
 
   def title
@@ -152,10 +160,6 @@ class Post
   def <=>(other)
     date <=> other.date
   end
-
-  private
-
-  attr_reader :markdown
 end
 
 class PageWriter
@@ -181,14 +185,14 @@ class Website
   def self.generate
     writer = PageWriter.new("./www")
 
+    # Render 404 page
+    writer.write NotFoundPage.new
+
     # Generate and render posts
     posts = Dir["./posts/*.md"].map { |src| Post.new(src) }
                                .sort
                                .reverse
                                .each { |post| writer.write PostPage.new(post) }
-
-    # Render 404 page
-    writer.write NotFoundPage.new
 
     # Render home page
     writer.write HomePage.new(posts)
