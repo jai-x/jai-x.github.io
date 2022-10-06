@@ -60,6 +60,47 @@ module PageComponents
 
     attr_reader :content
   end
+
+  class HomeSection < Phlex::View
+    def template(&block)
+      section class: "home-section" do
+        yield_content(&block)
+      end
+    end
+  end
+
+  class Ideas < Phlex::View
+    EMOJIS = [
+      NOT_DONE    = "📝",
+      IN_PROGRESS = "🚧",
+      DONE        = "✅",
+      UNKNOWN     = "❓",
+    ].freeze
+
+    def template
+      p do
+        ideas.each do |(status, line)|
+          div(class: "idea-row") do
+            span(class: "idea-emoji") { status }
+            span line
+          end
+        end
+      end
+    end
+
+    private
+
+    def ideas
+      @ideas ||= File.readlines("./ideas.md")
+        .map do |line|
+          line.strip!
+          next [NOT_DONE, line] if line.delete_prefix!("- [ ] ")
+          next [IN_PROGRESS, line] if line.delete_prefix!("- [~] ")
+          next [DONE, line] if line.delete_prefix!("- [x] ")
+          [UNKNOWN, line]
+        end
+    end
+  end
 end
 
 class ApplicationPage < Phlex::View
@@ -111,7 +152,7 @@ class HomePage < ApplicationPage
 
   def template
     render Layout.new('home') do
-      section class: "home-section" do
+      render HomeSection.new do
         h2 "posts"
         posts.each do |post|
           h3 { a post.title, href: "/posts/#{post.slug}.html" }
@@ -121,9 +162,9 @@ class HomePage < ApplicationPage
 
       hr
 
-      section class: "home-section" do
+      render HomeSection.new do
         h2 "ideas"
-        render Markdown.new(ideas)
+        render Ideas.new
       end
     end
   end
