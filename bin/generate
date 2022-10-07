@@ -91,14 +91,15 @@ module PageComponents
     private
 
     def ideas
-      @ideas ||= File.readlines("./ideas.md")
-        .map do |line|
-          line.strip!
-          next [NOT_DONE, line] if line.delete_prefix!("- [ ] ")
-          next [IN_PROGRESS, line] if line.delete_prefix!("- [~] ")
-          next [DONE, line] if line.delete_prefix!("- [x] ")
-          [UNKNOWN, line]
-        end
+      @ideas ||= File.readlines("./ideas.md").map do |line|
+        line.strip!
+
+        next [NOT_DONE, line] if line.delete_prefix!("- [ ] ")
+        next [IN_PROGRESS, line] if line.delete_prefix!("- [~] ")
+        next [DONE, line] if line.delete_prefix!("- [x] ")
+
+        [UNKNOWN, line]
+      end
     end
   end
 
@@ -146,7 +147,7 @@ class NotFoundPage < ApplicationPage
   end
 
   def template
-    render Layout.new('404') do
+    render Layout.new("404") do
       h1 "404"
       p "Page not found"
     end
@@ -163,7 +164,7 @@ class HomePage < ApplicationPage
   end
 
   def template
-    render Layout.new('home') do
+    render Layout.new("home") do
       render HomeSection.new do
         h2 "posts"
         posts.each do |post|
