@@ -118,7 +118,10 @@ end
 
 class ApplicationPage < Phlex::View
   include PageComponents
-  register_element :hr
+
+  def hr
+    raw "<hr align=\"left\">"
+  end
 end
 
 class PostPage < ApplicationPage
