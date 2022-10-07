@@ -1,3 +1,4 @@
+- [ ] A wiki website like fanwiki but not cringe (fanwiki.gg)
 - [ ] A readonly static HTML/CSS version of the Tube map, viewable on mobile
 - [ ] A review of the movie Tommorrowland (2015)
 - [ ] A page to interactively view mathematical transform (like the Fourier transform video from 3B1B)
