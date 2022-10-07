@@ -10,4 +10,5 @@ gem "phlex"
 group :development do
   gem "pry"
   gem "rubocop"
+  gem "webrick"
 end
