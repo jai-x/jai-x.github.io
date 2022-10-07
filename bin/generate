@@ -101,6 +101,18 @@ module PageComponents
         end
     end
   end
+
+  class Projects < Phlex::View
+    def template
+      render Markdown.new(projects)
+    end
+
+    private
+
+    def projects
+      @projects ||= File.read("./projects.md")
+    end
+  end
 end
 
 class ApplicationPage < Phlex::View
@@ -158,6 +170,13 @@ class HomePage < ApplicationPage
           h3 { a post.title, href: "/posts/#{post.slug}.html" }
           p { strong post.date }
         end
+      end
+
+      hr
+
+      render HomeSection.new do
+        h2 "projects"
+        render Projects.new
       end
 
       hr
