@@ -34,6 +34,7 @@ module PageComponents
             a(href: "https://twitter.com/jai_1337") { "twitter" }
             a(href: "https://github.com/jai-x") { "github" }
             a(href: "mailto:jai@jai.moe") { "email" }
+            a(href: "https://github.com/jai-x/jai-x.github.io") { "source" }
             div class: "nav-border"
           end
 
