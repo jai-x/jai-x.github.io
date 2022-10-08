@@ -4,6 +4,12 @@ Made in Javascript using [mithril](https://mithril.js.org) for component hierarc
 and [GSAP](https://greensock.com/gsap/) for animation.
 [source code](https://github.com/jai-x/crashfm-live)
 
+### [hues](https://github.com/jai-x/hues)
+A desktop implementation of the [0x40 Hues project](https://0x40hues.blogspot.com/).
+Chiefly inspired by [mon's implementation](https://0x40.mon.im).
+Written in C# using the [osu!framework](https://github.com/ppy/osu-framework/).
+Still not finished as it doesn't implement all the effect types and has no editor.
+
 ### [gamers.fail](https://gamers.fail)
 A weekly newsletter giving a roundup of the top "games" "news" from /r/Games for the week.
 Inspired by [n-gate](http://n-gate.com).
