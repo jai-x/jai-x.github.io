@@ -2,9 +2,10 @@
 
 # frozen_string_literal: true
 
-require "active_support/core_ext/string/inflections"
 require "date"
 require "erb"
+require "fileutils"
+require "active_support/core_ext/string/inflections"
 require "kramdown"
 require "kramdown-parser-gfm"
 require "phlex"
@@ -120,6 +121,12 @@ end
 class ApplicationPage < Phlex::View
   include PageComponents
 
+  def path
+    raise NotImplementedError
+  end
+
+  private
+
   def hr
     raw "<hr align=\"left\">"
   end
@@ -210,15 +217,22 @@ class Post
   end
 
   def title
-    @title ||= markdown.lines[0].gsub("#", "").strip.downcase
-  end
-
-  def slug
-    @slug ||= title.parameterize
+    @title ||= begin
+      title = markdown.lines[0].gsub("#", "").strip.downcase
+      draft? ? "[DRAFT] #{title}" : title
+    end
   end
 
   def date
     @date ||= Date.parse(markdown.lines[1].gsub("*", "").strip)
+  end
+
+  def draft?
+    @draft ||= markdown.lines[2].strip == 'draft'
+  end
+
+  def slug
+    @slug ||= title.parameterize
   end
 
   # Sort comparison by date
@@ -228,7 +242,7 @@ class Post
 end
 
 class PageWriter
-  def initialize(prefix = "./")
+  def initialize(prefix: "./")
     @prefix = prefix
   end
 
@@ -241,27 +255,60 @@ class PageWriter
     end
   end
 
+  def delete(view)
+    path = File.join(prefix, view.path)
+
+    FileUtils.rm(path)
+    puts "Deleted page: #{path}"
+  rescue => e
+    puts e
+  end
+
   private
 
   attr_reader :prefix
 end
 
 class Website
-  def self.generate
-    writer = PageWriter.new("./www")
+  def generate(with_drafts: false)
+    posts = with_drafts ? all_posts : all_posts.reject { |post| post.draft? }
 
-    # Render 404 page
-    writer.write NotFoundPage.new
+    make_pages(posts).each { |page| writer.write page }
+  end
 
-    # Generate and render posts
-    posts = Dir["./posts/*.md"].map { |src| Post.new(src) }
-                               .sort
-                               .reverse
-                               .each { |post| writer.write PostPage.new(post) }
+  def clean
+    make_pages(all_posts).each { |page| writer.delete page }
+  end
 
-    # Render home page
-    writer.write HomePage.new(posts)
+  private
+
+  def make_pages(posts)
+    [
+      NotFoundPage.new,
+      HomePage.new(posts),
+      *posts.map { |post| PostPage.new(post) },
+    ].freeze
+  end
+
+  def all_posts
+    @all_posts ||= Dir["./posts/*.md"]
+      .map { |src| Post.new(src) }
+      .sort
+      .reverse
+  end
+
+  def writer
+    @writer ||= PageWriter.new(prefix: "./www")
   end
 end
 
-Website.generate
+website = Website.new
+
+case ARGV.first&.strip
+when "--with-drafts"
+  website.generate(with_drafts: true)
+when "--clean"
+  website.clean
+else
+  website.generate
+end
