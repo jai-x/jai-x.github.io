@@ -10,6 +10,7 @@
 
 :root {
   --content-width: 66ch;
+  --color-divider: #808080;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -47,6 +48,16 @@ body {
   text-rendering: optimizelegibility;
 
   display: flex;
+}
+
+hr {
+  border-color: var(--color-divider);
+}
+
+table, td, th {
+    border: 1px inset var(--color-divider);
+    border-collapse: collapse;
+    border-spacing: 0;
 }
 
 @media (orientation: landscape) {
@@ -89,7 +100,7 @@ nav {
 }
 
 .nav-border {
-  background-color: white;
+  background-color: var(--color-divider);
   position: absolute;
 }
 
@@ -97,7 +108,7 @@ nav {
   .nav-border {
     right: 0;
     top: 5%;
-    width: 1px;
+    width: 2px;
     height: 90%;
   }
 }
@@ -107,7 +118,7 @@ nav {
     bottom: 0;
     left: 5%;
     width: 90%;
-    height: 1px;
+    height: 2px;
   }
 }
 
