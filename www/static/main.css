@@ -219,8 +219,8 @@ a:hover, a:focus {
 }
 
 .code-block {
-  width: unset;
   margin: 20px 0;
+  width: 100%;
 }
 
 .code-label {
@@ -252,9 +252,9 @@ pre > code {
 pre {
   margin: 0;
   overflow-x: auto;
-  max-width: 100%;
-  min-width: var(--content-width);
+  min-width: min(100%, var(--content-width));
   width: fit-content;
+  max-width: 100%;
 
   border-radius: 3px;
   background-color: var(--color-code-bg);
