@@ -9,7 +9,8 @@
 }
 
 :root {
-  --content-width: 66ch;
+  --spacing: 18px;
+  --content-width: 605px;
   --color-divider: #808080;
 }
 
@@ -48,6 +49,7 @@ body {
   text-rendering: optimizelegibility;
 
   display: flex;
+  padding-top: 18px;
 }
 
 hr {
@@ -64,60 +66,77 @@ table, td, th {
   body {
     flex-direction: row;
     align-items: flex-start;
-    padding-top: 2ch;
   }
 }
 
 @media (orientation: portrait) {
   body {
     flex-direction: column;
-    align-items: center;
   }
 }
 
 nav {
-  position: relative;
-  font-size: 20px;
-
   display: flex;
-  align-items: center;
-  justify-content: space-evenly;
 }
 
 @media (orientation: landscape) {
   nav {
-    flex-direction: column;
-    min-width: 12ch;
+    flex-direction: row;
   }
 }
 
 @media (orientation: portrait) {
   nav {
-    flex-direction: row;
-    max-width: 55ch;
+    flex-direction: column;
+    padding-right: var(--spacing);
+    padding-left: var(--spacing);
     width: 100%;
   }
 }
 
-.nav-border {
-  background-color: var(--color-divider);
-  position: absolute;
+.nav-items {
+  display: flex;
+  gap: var(--spacing);
+  font-size: 20px
 }
 
 @media (orientation: landscape) {
-  .nav-border {
-    right: 0;
-    top: 5%;
-    width: 2px;
-    height: 90%;
+  .nav-items {
+    flex-direction: column;
+    align-items: center;
+    padding-left: calc(2 * var(--spacing));
+    padding-right: calc(2 * var(--spacing));
   }
 }
 
 @media (orientation: portrait) {
-  .nav-border {
-    bottom: 0;
-    left: 5%;
-    width: 90%;
+  .nav-items {
+    flex-direction: row;
+    width: 100%;
+    padding-bottom: var(--spacing);
+    align-items: center;
+  }
+
+  .nav-items > *:not(:first-of-type) {
+    font-size: 16px;
+  }
+}
+
+.nav-line {
+  background-color: var(--color-divider);
+}
+
+@media (orientation: landscape) {
+  .nav-line {
+    width: 2px;
+    min-height: 100%;
+  }
+}
+
+@media (orientation: portrait) {
+  .nav-line {
+    width: 100%;
+    max-width: var(--content-width);
     height: 2px;
   }
 }
@@ -126,14 +145,7 @@ nav a {
   color: var(--color-text);
   text-decoration: none;
   border-bottom: 1px transparent solid;
-  margin-top: 1.5ch;
-  margin-bottom: 1.5ch;
-}
-
-@media (orientation: portrait) {
-  nav a:not(:first-of-type) {
-    font-size: 16px;
-  }
+  /* transparent border to prevent resizing on hover */
 }
 
 nav a:hover, nav a:focus {
@@ -141,8 +153,8 @@ nav a:hover, nav a:focus {
 }
 
 main {
-  padding-left: 2ch;
-  padding-right: 2ch;
+  padding-left: 18px;
+  padding-right: 18px;
   width: 100%;
   overflow: hidden;
 }
@@ -153,7 +165,11 @@ main > * {
 }
 
 @media (orientation: landscape) {
-  main h1:first-of-type {
+  .home-section {
+    margin-bottom: var(--spacing):
+  }
+
+  .home-section > h2 {
     margin-top: 0;
   }
 }
@@ -176,12 +192,15 @@ main > * {
   min-width: 3ch;
 }
 
+h1 {
+  margin-top: 0;
+}
+
 a {
   color: var(--color-link);
   text-decoration: none;
   border-bottom: 1px transparent solid;
 }
-
 
 a:hover, a:focus {
   border-bottom: 1px var(--color-link) solid;
@@ -202,15 +221,11 @@ pre > code {
   border: unset;
 }
 
-.highlighter-rouge, div.highlight {
-  width: fit-content;
-  max-width: 100%;
-}
-
 pre {
   margin: 20px 0;
   overflow-x: auto;
   max-width: 100%;
+  min-width: var(--content-width);
   width: fit-content;
 
   border-radius: 3px;

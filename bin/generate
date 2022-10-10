@@ -31,12 +31,14 @@ module PageComponents
 
         body do
           nav do
-            a(href: "/") { "jai.moe" }
-            a(href: "https://twitter.com/jai_1337") { "twitter" }
-            a(href: "https://github.com/jai-x") { "github" }
-            a(href: "mailto:jai@jai.moe") { "email" }
-            a(href: "https://github.com/jai-x/jai-x.github.io") { "source" }
-            div class: "nav-border"
+            div class: "nav-items" do
+              a(href: "/") { "jai.moe" }
+              a(href: "https://twitter.com/jai_1337") { "twitter" }
+              a(href: "https://github.com/jai-x") { "github" }
+              a(href: "mailto:jai@jai.moe") { "email" }
+              a(href: "https://github.com/jai-x/jai-x.github.io") { "source" }
+            end
+            div class: "nav-line"
           end
 
           main { yield_content(&block) }
