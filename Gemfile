@@ -3,9 +3,9 @@
 source "https://rubygems.org"
 
 gem "activesupport"
-gem "kramdown"
-gem "kramdown-parser-gfm"
 gem "phlex"
+gem "redcarpet"
+gem "rouge"
 
 group :development do
   gem "pry"
