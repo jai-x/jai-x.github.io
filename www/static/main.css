@@ -61,7 +61,8 @@ body {
   text-rendering: optimizelegibility;
 
   display: flex;
-  padding-top: 18px;
+  padding-top: var(--spacing);
+  padding-bottom: var(--spacing);
 }
 
 hr {
@@ -165,8 +166,8 @@ nav a:hover, nav a:focus {
 }
 
 main {
-  padding-left: 18px;
-  padding-right: 18px;
+  padding-left: var(--spacing);
+  padding-right: var(--spacing);
   width: 100%;
   overflow: hidden;
 }
