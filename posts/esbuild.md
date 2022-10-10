@@ -89,8 +89,7 @@ just copy these command line invocations into your `package.json` scripts
 section and have things up and running really quickly. Here's what that used to
 look like for my project:
 
-```json
-// package.json
+```json:package.json
 {
   "scripts": {
     "dev": "esbuild src/app.js --outfile=./www/static/main.js --bundle --sourcemap --servedir=./www",
@@ -112,8 +111,7 @@ JSON config file, parse it into the expected command line flags and then pipe
 the result into the esbuild binary. As a result, my `package.json` file and
 associated esbuild JSON config files now look like this:
 
-```json
-// package.json
+```json:package.json
 {
   "scripts": {
     "build": "./bin/esbuildParse.mjs ./esbuild.build.json | xargs esbuild",
@@ -121,8 +119,7 @@ associated esbuild JSON config files now look like this:
   }
 }
 ```
-```json
-// esbuild.dev.json
+```json:esbuild.dev.json
 {
   "entry": "./src/app.js",
   "outfile": "./www/static/main.js",
@@ -131,8 +128,7 @@ associated esbuild JSON config files now look like this:
   "servedir": "./www"
 }
 ```
-```json
-// esbuild.build.json
+```json:esbuild.build.json
 {
   "entry": "./src/app.js",
   "outfile": "./www/static/main.js",
