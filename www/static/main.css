@@ -28,6 +28,7 @@
   .code-highlight > .c1 { color: #223344; }
   .code-highlight > .s2 { color: #E6DB74; }
   .code-highlight > .si { color: #F92782; }
+  .code-highlight > .kc { color: #AE81FF; }
 }
 
 @media (prefers-color-scheme: light) {
@@ -42,8 +43,9 @@
   .code-highlight > .k, .no, .se { color: #0087FF; }
   .code-highlight > .nf, .vc, .kp { color: #39AC04; }
   .code-highlight > .c1 { color: #707A93; }
-  .code-highlight > .s2 { color: #D0A911; }
+  .code-highlight > .s2 { color: #CCA610; }
   .code-highlight > .si { color: #F92782; }
+  .code-highlight > .kc { color: #4C3375; }
 }
 
 * {
