@@ -264,4 +264,5 @@ pre {
   background-color: var(--color-code-bg);
   padding: 0 0.5ch;
   border: 1px solid var(--color-code-border);
+  scrollbar-gutter: stable;
 }
