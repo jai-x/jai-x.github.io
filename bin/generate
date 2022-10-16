@@ -60,9 +60,9 @@ module PageComponents
 
     def template
       div class: "code-block" do
-        div(class: "code-label")  { filename } if filename.present?
+        div(class: "code-label")  { label }
         pre do
-          code class: "code-highlight #{lang}" do
+          code class: "code-highlight" do
             raw parsed
           end
         end
@@ -72,6 +72,10 @@ module PageComponents
     private
 
     attr_reader :parsed, :lang, :filename
+
+    def label
+      filename.present? ? filename : "#{lang.capitalize} code"
+    end
   end
 
   class Markdown < Phlex::View
@@ -84,6 +88,8 @@ module PageComponents
     end
 
     private
+
+    attr_reader :content
 
     def markdown
       Redcarpet::Markdown.new(renderer, {
@@ -109,8 +115,6 @@ module PageComponents
         end
       end
     end
-
-    attr_reader :content
   end
 
   class HomeSection < Phlex::View

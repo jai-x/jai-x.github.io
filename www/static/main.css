@@ -12,6 +12,8 @@
   --spacing: 18px;
   --content-width: 605px;
   --color-divider: #808080;
+  --content-text-size: 16px;
+  --label-text-size: 12px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -59,7 +61,7 @@ body {
   background-color: var(--color-bg);
 
   font-family: "Roboto Slab";
-  font-size: 16px;
+  font-size: var(--content-text-size);
   text-rendering: optimizelegibility;
 
   display: flex;
@@ -236,6 +238,7 @@ a:hover, a:focus {
   padding: 0 0.5ch;
   border: 1px solid var(--color-code-border);
   border-bottom: none;
+  font-size: var(--label-text-size);
 }
 
 code {
@@ -260,9 +263,10 @@ pre {
   width: fit-content;
   max-width: 100%;
 
-  border-radius: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
   background-color: var(--color-code-bg);
   padding: 0 0.5ch;
   border: 1px solid var(--color-code-border);
-  scrollbar-gutter: stable;
 }
