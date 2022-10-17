@@ -19,7 +19,7 @@ class Post
   end
 
   def draft?
-    @draft ||= markdown.lines[2].strip == 'draft'
+    @draft ||= markdown.lines[2].strip == "draft"
   end
 
   def slug

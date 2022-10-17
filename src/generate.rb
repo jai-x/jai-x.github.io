@@ -25,7 +25,7 @@ when "--clean"
   website.clean
 when "--watch"
   website.generate(with_drafts: true)
-  Filewatcher.new("./posts/").watch do |changes|
+  Filewatcher.new("./posts/").watch do |_changes|
     website.generate(with_drafts: true)
   end
 else

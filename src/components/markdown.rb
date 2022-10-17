@@ -15,29 +15,27 @@ module Components
     attr_reader :content
 
     def markdown
-      Redcarpet::Markdown.new(renderer, {
-        tables: true,
-        fenced_code_blocks: true,
-        footnotes: true,
-      })
+      Redcarpet::Markdown.new(CustomRedcarpetRenderer, REDCARPET_OPTIONS)
     end
 
-    def renderer
-      # absolute memes to avoid making new classes
-      @@renderer ||= Class.new(Redcarpet::Render::HTML) do
-        include Rouge::Plugins::Redcarpet
+    REDCARPET_OPTIONS = {
+      tables: true,
+      fenced_code_blocks: true,
+      footnotes: true,
+    }.freeze
 
-        def block_code(code, lang)
-          lang, filename = lang.split(":")
-          parsed = super(code, lang)
-          MarkdownCodeBlock.new(parsed, lang, filename).call
-        end
+    class CustomRedcarpetRenderer < Redcarpet::Render::HTML
+      include Rouge::Plugins::Redcarpet
 
-        def rouge_formatter(_lexer)
-          Rouge::Formatters::HTML.new
-        end
+      def block_code(code, lang)
+        lang, filename = lang.split(":")
+        parsed = super(code, lang)
+        MarkdownCodeBlock.new(parsed, lang, filename).call
+      end
+
+      def rouge_formatter(_lexer)
+        Rouge::Formatters::HTML.new
       end
     end
   end
-
 end

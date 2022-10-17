@@ -2,7 +2,7 @@
 
 class Website
   def generate(with_drafts: false)
-    posts = with_drafts ? all_posts : all_posts.reject { |post| post.draft? }
+    posts = with_drafts ? all_posts : all_posts.reject(&:draft?)
 
     make_pages(posts).each { |page| writer.write page }
   end
@@ -23,9 +23,9 @@ class Website
 
   def all_posts
     @all_posts ||= Dir["./posts/*.md"]
-      .map { |src| Post.new(src) }
-      .sort
-      .reverse
+                   .map { |src| Post.new(src) }
+                   .sort
+                   .reverse
   end
 
   def writer

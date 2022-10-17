@@ -10,7 +10,7 @@ module Components
 
     def template
       div class: "code-block" do
-        div(class: "code-label")  { label }
+        div(class: "code-label") { label }
         pre do
           code class: "code-highlight" do
             raw parsed

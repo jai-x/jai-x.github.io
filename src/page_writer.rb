@@ -19,7 +19,7 @@ class PageWriter
 
     FileUtils.rm(path)
     puts "Deleted page: #{path}"
-  rescue => e
+  rescue StandardError => e
     puts e
   end
 
@@ -27,4 +27,3 @@ class PageWriter
 
   attr_reader :prefix
 end
-
