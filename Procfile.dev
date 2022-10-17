@@ -1,0 +1,2 @@
+server: ruby -run -e httpd ./www
+generate: bundle exec ruby src/generate.rb --watch

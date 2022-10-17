@@ -2,13 +2,17 @@
 
 source "https://rubygems.org"
 
-gem "activesupport"
+gem "activesupport", require: "active_support/core_ext/string/inflections"
+gem "filewatcher"
 gem "phlex"
 gem "redcarpet"
-gem "rouge"
+gem "rouge", require: ["rouge", "rouge/plugins/redcarpet"]
+gem "webrick"
+gem "zeitwerk"
 
 group :development do
   gem "pry"
   gem "rubocop"
-  gem "webrick"
 end
+
+gem "foreman", "~> 0.87.2"
