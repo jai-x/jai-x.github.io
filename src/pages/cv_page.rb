@@ -80,7 +80,7 @@ module Pages
       ROW_STYLE = <<~CSS
         display: flex;
         flex-direction: row;
-        align-items: flex-end;
+        align-items: center;
         justify-content: space-between;
       CSS
 
