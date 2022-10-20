@@ -71,6 +71,8 @@ body {
 
 hr {
   border-color: var(--color-divider);
+  margin-left: 0;
+  margin-right: 0;
 }
 
 table, td, th {
@@ -152,6 +154,7 @@ nav {
 
 @media (orientation: portrait) {
   .nav-line {
+    margin-bottom: var(--spacing);
     width: 100%;
     max-width: var(--content-width);
     height: 2px;

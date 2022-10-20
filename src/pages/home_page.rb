@@ -13,7 +13,7 @@ module Pages
     def template
       render Layout.new("home") do
         render HomeSection.new do
-          h2 "posts"
+          h2(style: "margin-top: 0;") { "posts" }
           posts.each do |post|
             h3 { a post.title, href: "/posts/#{post.slug}.html" }
             p { strong post.date }
