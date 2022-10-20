@@ -25,8 +25,9 @@ module Components
               a(href: "/") { "jai.moe" }
               a(href: "https://twitter.com/jai_1337") { "twitter" }
               a(href: "https://github.com/jai-x") { "github" }
-              a(href: "mailto:jai@jai.moe") { "email" }
               a(href: "https://github.com/jai-x/jai-x.github.io") { "source" }
+              a(href: "mailto:jai@jai.moe") { "email" }
+              a(href: "/cv.html") { "cv" }
             end
             div class: "nav-line"
           end

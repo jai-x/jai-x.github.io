@@ -17,6 +17,7 @@ class Website
     [
       Pages::NotFoundPage.new,
       Pages::HomePage.new(posts),
+      Pages::CvPage.new,
       *posts.map { |post| Pages::PostPage.new(post) },
     ].freeze
   end
