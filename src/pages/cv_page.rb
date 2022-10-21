@@ -12,9 +12,9 @@ module Pages
 
         render Grid.new(
           tl: cv[:info][:name],
-          tr: cv[:info][:email],
+          tr: '',
           bl: cv[:info][:website],
-          br: cv[:info][:phone],
+          br: cv[:info][:email],
         )
 
         render Section.new("Experience") do
