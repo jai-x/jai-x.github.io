@@ -138,7 +138,7 @@ module Pages
 
     PRINT_CSS = <<~CSS
       @page {
-        size: A4;
+        size: A4 portrait;
         padding: 0;
         margin: 0;
       }
