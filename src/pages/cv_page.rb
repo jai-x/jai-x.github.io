@@ -72,8 +72,12 @@ module Pages
     end
 
     def add_cv_css
-      raw "<style>#{PAGE_CSS}</style>"
-      raw "<style>#{PRINT_CSS}</style>"
+      style do
+        raw PAGE_CSS
+      end
+      style media: "print" do
+        raw PRINT_CSS
+      end
     end
 
     PAGE_CSS = <<~CSS
@@ -106,7 +110,7 @@ module Pages
       }
 
       .cv-section-divider {
-        width: var(--content-width);
+        width: 100%;
         border-top: 2px solid var(--color-divider);
       }
 
@@ -136,23 +140,39 @@ module Pages
       @page {
         size: A4;
         padding: 0;
-        margin: 5px;
+        margin: 0;
       }
 
-      @media print {
-        :root {
-          --content-width: 100%;
-          --content-text-size: 12px;
-          --spacing: 10px;
-        }
+      :root {
+        --content-width: 100%;
+        --content-text-size: 12px;
+        --spacing: 10px;
+      }
 
-        nav {
-          display: none;
-        }
+      html {
+        margin: 0;
+        padding: 0;
+      }
 
-        .cv-info-title > a{
-          color: unset;
-        }
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      main {
+        margin-top: 25px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0;
+        width: 90%;
+      }
+
+      nav {
+        display: none;
+      }
+
+      .cv-info-title > a{
+        color: unset;
       }
     CSS
 
