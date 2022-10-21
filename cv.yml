@@ -10,7 +10,8 @@ experience:
     start_date: 'Jan 2022'
     end_date: 'Present'
     location: 'London, UK / Remote'
-    details: []
+    details:
+      - 'TODO'
 
   - company: 'Compare the Market'
     position: 'Software Engineer'
@@ -56,12 +57,10 @@ experience:
 
 education:
   - institution: 'The University of Warwick'
-    qualification: 'Bachelor of Science in Computer Science'
+    qualification: 'BSc Computer Science (Course Incomplete)'
     start_date: 'October 2014'
     end_date: 'February 2017'
     location: 'Coventry, UK'
-    details:
-      - 'Course Incomplete'
 
 projects:
   - name: 'hues'
