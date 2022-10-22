@@ -5,7 +5,7 @@ module Pages
     include Components
 
     def path
-      raise NotImplementedError
+      raise NotImplementedError, "#{self.class} must implement method #path"
     end
   end
 end
