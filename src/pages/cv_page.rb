@@ -82,6 +82,7 @@ module Pages
 
     PAGE_CSS = <<~CSS
       .cv-grid {
+        margin-top: var(--spacing);
         margin-bottom: var(--spacing);
       }
 
@@ -101,7 +102,8 @@ module Pages
       }
 
       .cv-section-header {
-        margin: var(--spacing) 0;
+        margin-top: var(--spacing);
+        margin-bottom: var(--spacing);
       }
 
       .cv-section-title {

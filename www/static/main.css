@@ -56,6 +56,8 @@
 
 body {
   margin: 0;
+  padding-top: var(--spacing);
+  padding-bottom: var(--spacing);
 
   color: var(--color-text);
   background-color: var(--color-bg);
@@ -65,20 +67,6 @@ body {
   text-rendering: optimizelegibility;
 
   display: flex;
-  padding-top: var(--spacing);
-  padding-bottom: var(--spacing);
-}
-
-hr {
-  border-color: var(--color-divider);
-  margin-left: 0;
-  margin-right: 0;
-}
-
-table, td, th {
-    border: 1px inset var(--color-divider);
-    border-collapse: collapse;
-    border-spacing: 0;
 }
 
 @media (orientation: landscape) {
@@ -154,7 +142,6 @@ nav {
 
 @media (orientation: portrait) {
   .nav-line {
-    margin-bottom: var(--spacing);
     width: 100%;
     max-width: var(--content-width);
     height: 2px;
@@ -179,19 +166,22 @@ main {
   overflow: hidden;
 }
 
+@media (orientation: landscape) {
+  /* negative margin to line up content with top */
+  main {
+    margin-top: calc(var(--spacing) * -1);
+  }
+}
+
 main > * {
   width: var(--content-width);
   max-width: 100%;
 }
 
-@media (orientation: landscape) {
-  .home-section {
-    margin-bottom: var(--spacing):
-  }
-
-  .home-section > h2 {
-    margin-top: 0;
-  }
+hr {
+  border-color: var(--color-divider);
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .home-section > h3 {
@@ -213,7 +203,6 @@ main > * {
 }
 
 h1 {
-  margin-top: 0;
   width: unset;
 }
 
@@ -272,4 +261,10 @@ pre {
   background-color: var(--color-code-bg);
   padding: 0 0.5ch;
   border: 1px solid var(--color-code-border);
+}
+
+table, td, th {
+    border: 1px inset var(--color-divider);
+    border-collapse: collapse;
+    border-spacing: 0;
 }

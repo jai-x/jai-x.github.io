@@ -12,8 +12,7 @@ module Pages
 
     def template
       render Layout.new("home") do
-        render HomeSection.new do
-          h2(style: "margin-top: 0;") { "posts" }
+        render HomeSection.new("posts") do
           posts.each do |post|
             h3 do
               a(href: "/posts/#{post.slug}.html") { post.title }
@@ -24,17 +23,11 @@ module Pages
           end
         end
 
-        hr
-
-        render HomeSection.new do
-          h2 { "projects" }
+        render HomeSection.new("projects") do
           render Projects.new
         end
 
-        hr
-
-        render HomeSection.new do
-          h2 { "ideas" }
+        render HomeSection.new("ideas") do
           render Ideas.new
         end
       end
