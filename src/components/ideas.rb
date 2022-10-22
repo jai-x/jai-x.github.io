@@ -14,7 +14,7 @@ module Components
         ideas.each do |(status, line)|
           div(class: "idea-row") do
             span(class: "idea-emoji") { status }
-            span line
+            span { line }
           end
         end
       end

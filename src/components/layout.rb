@@ -16,7 +16,7 @@ module Components
           link rel: "preload", href: "/static/roboto_slab_regular.ttf", as: "font", crossorigin: true
           link rel: "preload", href: "/static/fira_code_regular.ttf", as: "font", crossorigin: true
           link rel: "stylesheet", href: "/static/main.css"
-          title "#{title_text} | jai.moe"
+          title { "#{title_text} | jai.moe" }
         end
 
         body do

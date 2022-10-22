@@ -184,12 +184,12 @@ module Pages
       def template
         div class: "cv-grid" do
           div class: "cv-grid-row" do
-            h3 @tl
-            span @tr
+            h3 { @tl }
+            span { @tr }
           end
           div class: "cv-grid-row" do
-            span @bl
-            span @br
+            span { @bl }
+            span { @br }
           end
         end
       end

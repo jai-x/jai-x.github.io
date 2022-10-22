@@ -15,22 +15,26 @@ module Pages
         render HomeSection.new do
           h2(style: "margin-top: 0;") { "posts" }
           posts.each do |post|
-            h3 { a post.title, href: "/posts/#{post.slug}.html" }
-            p { strong post.date }
+            h3 do
+              a(href: "/posts/#{post.slug}.html") { post.title }
+            end
+            p do
+              strong { post.date }
+            end
           end
         end
 
         hr
 
         render HomeSection.new do
-          h2 "projects"
+          h2 { "projects" }
           render Projects.new
         end
 
         hr
 
         render HomeSection.new do
-          h2 "ideas"
+          h2 { "ideas" }
           render Ideas.new
         end
       end

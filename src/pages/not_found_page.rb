@@ -8,8 +8,8 @@ module Pages
 
     def template
       render Layout.new("404") do
-        h1 "404"
-        p "Page not found"
+        h1 { "404" }
+        p { "Page not found" }
       end
     end
   end
