@@ -1,17 +1,25 @@
 # frozen_string_literal: true
 
 class Website
-  def generate(with_drafts: false)
-    posts = with_drafts ? all_posts : all_posts.reject(&:draft?)
-
-    make_pages(posts).each { |page| writer.write page }
+  def self.generate(with_drafts: false)
+    new(with_drafts: with_drafts).generate
   end
 
-  def clean
-    make_pages(all_posts).each { |page| writer.delete page }
+  def initialize(with_drafts: false)
+    @with_drafts = with_drafts
+  end
+
+  def generate
+    pages.each { |page| writer.write page }
   end
 
   private
+
+  def pages
+    posts = @with_drafts ? all_posts : all_posts.reject(&:draft?)
+
+    @pages = make_pages(posts)
+  end
 
   def make_pages(posts)
     [
