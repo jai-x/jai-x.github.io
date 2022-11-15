@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Components
-  class HomeSection < Phlex::View
+  class HomeSection < Phlex::HTML
     def initialize(title)
       @title = title
     end

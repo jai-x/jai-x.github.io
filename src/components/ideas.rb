@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Components
-  class Ideas < Phlex::View
+  class Ideas < Phlex::HTML
     EMOJIS = [
       NOT_DONE    = "📝",
       IN_PROGRESS = "🚧",

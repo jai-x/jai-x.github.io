@@ -73,10 +73,10 @@ module Pages
 
     def add_cv_css
       style do
-        raw PAGE_CSS
+        unsafe_raw PAGE_CSS
       end
       style media: "print" do
-        raw PRINT_CSS
+        unsafe_raw PRINT_CSS
       end
     end
 
@@ -178,7 +178,7 @@ module Pages
       }
     CSS
 
-    class Grid < Phlex::View
+    class Grid < Phlex::HTML
       def initialize(tl:, tr:, bl:, br:)
         @tl, @tr, @bl, @br = tl, tr, bl, br
       end
@@ -197,7 +197,7 @@ module Pages
       end
     end
 
-    class Section < Phlex::View
+    class Section < Phlex::HTML
       def initialize(title)
         @title = title
       end
@@ -211,7 +211,7 @@ module Pages
       end
     end
 
-    class WorkSection < Phlex::View
+    class WorkSection < Phlex::HTML
       def initialize(work)
         @work = work
       end

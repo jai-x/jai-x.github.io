@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Components
-  class Projects < Phlex::View
+  class Projects < Phlex::HTML
     def template
       render Markdown.new(projects)
     end

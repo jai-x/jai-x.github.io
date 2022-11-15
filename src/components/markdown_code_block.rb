@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Components
-  class MarkdownCodeBlock < Phlex::View
+  class MarkdownCodeBlock < Phlex::HTML
     def initialize(parsed, lang, filename)
       @parsed = parsed
       @lang = lang
@@ -13,7 +13,7 @@ module Components
         div(class: "code-label") { label }
         pre do
           code class: "code-highlight" do
-            raw parsed
+            unsafe_raw parsed
           end
         end
       end

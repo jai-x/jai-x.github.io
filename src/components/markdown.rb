@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 module Components
-  class Markdown < Phlex::View
+  class Markdown < Phlex::HTML
     def initialize(content)
       @content = content
     end
 
     def template
-      raw markdown.render(content)
+      unsafe_raw markdown.render(content)
     end
 
     private
