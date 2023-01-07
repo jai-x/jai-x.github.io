@@ -22,6 +22,7 @@ module Components
       tables: true,
       fenced_code_blocks: true,
       footnotes: true,
+      autolink: true,
     }.freeze
 
     class CustomRedcarpetRenderer < Redcarpet::Render::HTML
