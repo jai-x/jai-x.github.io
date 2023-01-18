@@ -150,12 +150,9 @@ nav {
 
 nav a {
   color: var(--color-text);
-  text-decoration: none;
-  border-bottom: 1px transparent solid;
-  /* transparent border to prevent resizing on hover */
 }
 
-nav a:hover, nav a:focus {
+nav a:hover, a:focus {
   border-bottom: 1px var(--color-text) solid;
 }
 
@@ -208,8 +205,10 @@ h1 {
 
 a {
   color: var(--color-link);
+  font-weight: normal;
   text-decoration: none;
   border-bottom: 1px transparent solid;
+  /* transparent border to prevent resizing on hover */
 }
 
 a:hover, a:focus {
