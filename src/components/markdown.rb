@@ -23,6 +23,7 @@ module Components
       fenced_code_blocks: true,
       footnotes: true,
       autolink: true,
+      no_intra_emphasis: true,
     }.freeze
 
     class CustomRedcarpetRenderer < Redcarpet::Render::HTML
