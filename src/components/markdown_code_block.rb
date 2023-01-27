@@ -10,7 +10,7 @@ module Components
 
     def template
       div class: "code-block" do
-        div(class: "code-label") { label }
+        div(class: "code-label") { label } if lang.present?
         pre do
           code class: "code-highlight" do
             unsafe_raw parsed

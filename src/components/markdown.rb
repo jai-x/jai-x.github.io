@@ -29,7 +29,7 @@ module Components
       include Rouge::Plugins::Redcarpet
 
       def block_code(code, lang)
-        lang, filename = lang.split(":")
+        lang, filename = lang&.split(":")
         parsed = super(code, lang)
         MarkdownCodeBlock.new(parsed, lang, filename).call
       end
