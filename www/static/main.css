@@ -301,6 +301,7 @@ blockquote {
   filter: brightness(80%);
 }
 
+/*
 blockquote > *::before {
     content: '\201C';
 }
@@ -308,3 +309,4 @@ blockquote > *::before {
 blockquote > *::after {
     content: '\201D';
 }
+*/

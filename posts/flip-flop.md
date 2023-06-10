@@ -16,27 +16,30 @@ It has never been used in any code......................................... ever
 ](/images/flip-flop-gary-tweets.png)
 *Source: https://twitter.com/garybernhardt/status/1611159965351444480*
 
-As a someone who uses Ruby in my day job, I was quite interested in learning about an
-obscure or lesser used feature of the language. Maybe I could find a use case for it in
-my work, or at least be satified in the knowledge that it's there?
+As a someone who uses Ruby in my day job, I was quite interested in learning
+about an obscure or lesser used feature of the language.
+Maybe I could find a use case for it in my work, or at least be satisfied in the
+knowledge that it's there?
 
-Well, after looking it up in the docs I can say it's definitely a very niche feature and
-I'm inclined to agree with Gary. I found this feature  odd enough that I had to know the
-reason for this being in the language, so this post details the small amount of research
-I did in looking up the lineage of the Ruby flip-flop operator.
+Well, after looking it up in the docs I can say it's definitely a very niche
+feature and I'm inclined to agree with Gary.
+I found this feature odd enough that I had to know the reason for this being in
+the language, so this post details the small amount of research I did in looking
+up the lineage of the Ruby flip-flop operator.
   
 ## The flip-flop operator in Ruby
 
-At the time of writing, the most current version of Ruby is version 3.2, in which the
-[flip-flop operator][ruby_flip_flop] is documented. However, instead of diving into it
-right away, let me breifly explain the Ruby range syntax to give some context to why I
-find this operator so unusual.
+At the time of writing, the most current version of Ruby is version 3.2, in
+which the [flip-flop operator][ruby_flip_flop] is documented.
+However, instead of diving into it right away, let me breifly explain the Ruby
+range syntax to give some context to why I find this operator so unusual.
 
-Ruby, like many other languages, has [syntax for producing a range of values][ruby_range_literal].
+Ruby, like many other languages, has
+[syntax for producing a range of values][ruby_range_literal].
 This can be in either the two dot inclusive form or the three dot exlusive form.
-In either case, this syntax is a literal expression which results in an instance of the
-[`Range` class][ruby_range_class] which produces values from the start value on the left,
-to end value on the right.
+In either case, this syntax is a literal expression which results in an instance
+of the [`Range` class][ruby_range_class] which produces values from the start
+value on the left, to end value on the right.
 
 ```ruby
 # Two dot syntax inclusive range
@@ -53,15 +56,14 @@ to end value on the right.
 ```
 
 The flip-flop operator reuses the dot syntax, but instead expects two boolean
-expressions on either side of the dots. As explained in the Ruby documentation:
+expressions on either side of the dots.
+The Ruby documentation gives this explanation and simple example:
 
-> The form of the flip-flop is an expression that indicates when the flip-flop turns on,
-  `..` (or `...`), then an expression that indicates when the flip-flop will turn off.
-  While the flip-flop is on it will continue to evaluate to `true`, and `false` when off.
-
-To me, this immediately seems quite odd.
-The same syntax for range literals is being repurposed to evaluate to boolean value
-dependant on evaluation context. The Ruby documentation gives this simple example:
+> "The form of the flip-flop is an expression that indicates when the flip-flop
+> turns on, `..` (or `...`), then an expression that indicates when the
+> flip-flop will turn off.
+> While the flip-flop is on it will continue to evaluate to `true`, and `false`
+> when off." - [docs.ruby-lang.org][ruby_flip_flop]
 
 ```ruby
 selected = []
@@ -73,11 +75,10 @@ end
 p selected # prints [2, 3, 4, 5, 6, 7, 8]
 ```
 
-To any developers familiar with Ruby, this might appear like it's actually some sort of
-syntactic sugar for the [Enumerable#include?][ruby_enumerable_include] method. In fact if
-I did see this code in the wild I would be tempted to refactor the conditional into this
-(contrivied example notwithstanding):
-
+To any developers familiar with Ruby, this might appear like it's actually some
+sort of syntactic sugar for the [Enumerable#include?][ruby_enumerable_include]
+method. In fact if I did see this code in the wild I would be tempted to
+refactor the conditional into this (contrivied example notwithstanding):
 ```ruby
 selected = []
 
@@ -87,6 +88,9 @@ end
 
 p selected # prints [2, 3, 4, 5, 6, 7, 8]
 ```
+
+However in this case, the flip-flop operator is repurposing the syntax for range
+literals to evaluate to boolean value dependant on evaluation context.
 
 * However in this case, the flip-flop operator...
 * How does it work (with examples)
