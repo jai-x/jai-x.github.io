@@ -203,6 +203,10 @@ h1 {
   width: unset;
 }
 
+table {
+  width: unset;
+}
+
 a {
   color: var(--color-link);
   font-weight: normal;
