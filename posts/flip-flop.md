@@ -157,7 +157,19 @@ literals to evaluate to boolean value dependant on evaluation context.
 * https://en.wikipedia.org/wiki/QED_(text_editor)
 * https://gunkies.org/wiki/QED_(text_editor)
 * https://github.com/arnoldrobbins/qed-archive/
-* sds-940
+* Mentioned "Text Addressing" section on the bottom line of the sds-940
+  manual
+* Original article in ACM magazine: 
+* https://dl.acm.org/doi/pdf/10.1145/363848.363863
+* Mentions two existing "online" editors of the time on other mainframes
+  outside of Berkelee
+* Project MAC (https://en.wikipedia.org/wiki/MIT_Computer_Science_and_Artificial_Intelligence_Laboratory)
+* AN/FSQ-32 (https://en.wikipedia.org/wiki/AN/FSQ-32)
+
+## Pre-UNIX text editors
+
+* Can't be assed to trace which editors QED was inspired by
+* Pls let me know
 
 ## Timeline
 
